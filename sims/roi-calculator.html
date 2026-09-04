@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DVC6200 Reliability ROI Calculator — Applied Control</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: #1a2332; min-height: 100vh; padding: 1.5rem; }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, #0a1628, #1e3a5f, #004d40);
+    color: white; padding: 2rem; border-radius: 16px; margin-bottom: 1.5rem; text-align: center;
+  }
+  header h1 { font-size: 1.7rem; font-weight: 700; margin-bottom: 0.4rem; }
+  header p { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+
+  .card { background: white; border-radius: 16px; padding: 1.8rem; box-shadow: 0 4px 20px rgba(0,0,0,0.07); margin-bottom: 1.2rem; }
+  .card h2 { font-size: 1.1rem; color: #004d40; margin-bottom: 1.2rem; font-weight: 600; }
+
+  .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+
+  .input-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #718096; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
+  .input-group .hint { font-size: 0.75rem; color: #a0aec0; margin-bottom: 0.5rem; }
+
+  .input-row { display: flex; align-items: center; gap: 0.5rem; }
+  .input-row .prefix { font-size: 0.95rem; color: #4a5568; font-weight: 600; }
+
+  input[type="number"] {
+    width: 100%; padding: 0.6rem 0.8rem; border: 2px solid #e2e8f0; border-radius: 8px;
+    font-size: 1rem; font-weight: 600; color: #1a2332; background: #f7fafc;
+    transition: border-color 0.2s ease;
+  }
+  input[type="number"]:focus { outline: none; border-color: #00796b; background: white; }
+
+  .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1rem 0; }
+
+  .result-tile {
+    background: linear-gradient(145deg, #004d40, #00796b);
+    color: white; border-radius: 12px; padding: 1.2rem; text-align: center;
+  }
+  .result-tile.orange { background: linear-gradient(145deg, #e65100, #f57c00); }
+  .result-tile.blue { background: linear-gradient(145deg, #1565c0, #1976d2); }
+  .result-tile.green { background: linear-gradient(145deg, #2e7d32, #388e3c); }
+
+  .result-tile .r-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; margin-bottom: 0.4rem; }
+  .result-tile .r-value { font-size: 1.7rem; font-weight: 700; line-height: 1; }
+  .result-tile .r-unit { font-size: 0.78rem; opacity: 0.8; margin-top: 0.2rem; }
+
+  .narrative { background: #f0fdf4; border-left: 4px solid #00796b; border-radius: 0 10px 10px 0; padding: 1.2rem 1.4rem; margin: 1rem 0; font-size: 0.9rem; line-height: 1.7; color: #1a4731; }
+  .narrative strong { color: #004d40; }
+
+  .chart-area { margin: 1rem 0; }
+  .bar-label { font-size: 0.78rem; color: #718096; margin-bottom: 0.3rem; }
+  .bar-track { height: 28px; background: #e2e8f0; border-radius: 6px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 0.8rem; font-size: 0.78rem; font-weight: 700; color: white; transition: width 0.6s ease; min-width: 40px; }
+  .bar-item { margin-bottom: 0.75rem; }
+
+  .sales-script { background: #eff6ff; border: 1px solid #3b82f6; border-radius: 10px; padding: 1.2rem; margin-top: 1rem; }
+  .sales-script h4 { color: #1e40af; font-size: 0.85rem; margin-bottom: 0.6rem; }
+  .sales-script p { font-size: 0.88rem; color: #1e3a8a; line-height: 1.7; }
+
+  @media (max-width: 500px) { body { padding: 1rem; } header h1 { font-size: 1.3rem; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>📊 DVC6200 Reliability ROI Calculator</h1>
+  <p>Enter your plant's numbers — see the payback period and 5-year value of a diagnostic monitoring program</p>
+</header>
+
+<div class="card">
+  <h2>Your Plant's Numbers</h2>
+  <div class="input-grid">
+    <div class="input-group">
+      <label>Critical Control Valves</label>
+      <div class="hint">Valves that, if they fail, stop production</div>
+      <input type="number" id="numValves" value="50" min="1" max="5000" oninput="calc()">
+    </div>
+    <div class="input-group">
+      <label>Unplanned Shutdowns / Year</label>
+      <div class="hint">How many valve-caused trips per year currently?</div>
+      <input type="number" id="shutdownsPerYear" value="2" min="0" max="50" step="0.5" oninput="calc()">
+    </div>
+    <div class="input-group">
+      <label>Cost Per Hour of Downtime</label>
+      <div class="hint">Lost production + emergency labor + expediting</div>
+      <div class="input-row"><span class="prefix">$</span><input type="number" id="costPerHour" value="75000" min="1000" max="1000000" step="5000" oninput="calc()"></div>
+    </div>
+    <div class="input-group">
+      <label>Average Shutdown Duration (hours)</label>
+      <div class="hint">How long is each valve-caused trip?</div>
+      <input type="number" id="shutdownHours" value="4" min="0.5" max="72" step="0.5" oninput="calc()">
+    </div>
+    <div class="input-group">
+      <label>DVC6200 Install Cost Per Valve</label>
+      <div class="hint">Hardware + labor. Typical: $1,800–$2,500</div>
+      <div class="input-row"><span class="prefix">$</span><input type="number" id="dvc6200Cost" value="2000" min="500" max="10000" step="100" oninput="calc()"></div>
+    </div>
+    <div class="input-group">
+      <label>Expected Shutdown Reduction</label>
+      <div class="hint">DVC6200 programs reduce trips 60–80%. Use 70%.</div>
+      <input type="number" id="reductionPct" value="70" min="10" max="95" step="5" oninput="calc()">
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Your ROI Results</h2>
+  <div class="result-grid">
+    <div class="result-tile orange">
+      <div class="r-label">Annual Risk (Current)</div>
+      <div class="r-value" id="r-currentRisk">—</div>
+      <div class="r-unit">per year in downtime cost</div>
+    </div>
+    <div class="result-tile blue">
+      <div class="r-label">Total Install Investment</div>
+      <div class="r-value" id="r-investment">—</div>
+      <div class="r-unit">DVC6200 program cost</div>
+    </div>
+    <div class="result-tile">
+      <div class="r-label">Annual Savings</div>
+      <div class="r-value" id="r-savings">—</div>
+      <div class="r-unit">avoided downtime per year</div>
+    </div>
+    <div class="result-tile green">
+      <div class="r-label">Payback Period</div>
+      <div class="r-value" id="r-payback">—</div>
+      <div class="r-unit">months to break even</div>
+    </div>
+  </div>
+
+  <div class="chart-area">
+    <div class="bar-item">
+      <div class="bar-label">Current annual downtime cost</div>
+      <div class="bar-track"><div class="bar-fill" id="bar-current" style="background:#e53e3e;">$0</div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label">Investment (one-time)</div>
+      <div class="bar-track"><div class="bar-fill" id="bar-invest" style="background:#3182ce;">$0</div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label">Year 1 net savings (after investment)</div>
+      <div class="bar-track"><div class="bar-fill" id="bar-net" style="background:#38a169;">$0</div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label">5-Year cumulative savings</div>
+      <div class="bar-track"><div class="bar-fill" id="bar-5yr" style="background:#00796b;">$0</div></div>
+    </div>
+  </div>
+
+  <div id="narrative" class="narrative"></div>
+
+  <div class="sales-script">
+    <h4>💼 How to Present This to a Customer</h4>
+    <p id="salesScript">Enter your numbers above to generate a customized sales script.</p>
+  </div>
+</div>
+
+</div>
+<script>
+function fmt(n) {
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return '$' + Math.round(n/1000) + 'K';
+  return '$' + Math.round(n);
+}
+
+function fmtFull(n) {
+  return '$' + n.toLocaleString('en-US', {maximumFractionDigits: 0});
+}
+
+function calc() {
+  const valves = +document.getElementById('numValves').value || 0;
+  const trips = +document.getElementById('shutdownsPerYear').value || 0;
+  const cph = +document.getElementById('costPerHour').value || 0;
+  const hrs = +document.getElementById('shutdownHours').value || 0;
+  const dvcCost = +document.getElementById('dvc6200Cost').value || 0;
+  const redPct = (+document.getElementById('reductionPct').value || 70) / 100;
+
+  const currentRisk = trips * hrs * cph;
+  const investment = valves * dvcCost;
+  const annualSavings = currentRisk * redPct;
+  const yr1Net = annualSavings - investment;
+  const yr5 = annualSavings * 5 - investment;
+  const paybackMonths = investment > 0 && annualSavings > 0 ? (investment / annualSavings * 12) : 0;
+
+  document.getElementById('r-currentRisk').textContent = fmt(currentRisk);
+  document.getElementById('r-investment').textContent = fmt(investment);
+  document.getElementById('r-savings').textContent = fmt(annualSavings);
+  document.getElementById('r-payback').textContent = paybackMonths > 0 ? paybackMonths.toFixed(1) + ' mo' : '—';
+
+  // Bars — scale to max value
+  const maxVal = Math.max(currentRisk, investment, Math.abs(yr1Net), yr5, 1);
+  const barPct = (v) => Math.min(98, Math.max(4, Math.abs(v) / maxVal * 95));
+
+  document.getElementById('bar-current').style.width = barPct(currentRisk) + '%';
+  document.getElementById('bar-current').textContent = fmt(currentRisk);
+  document.getElementById('bar-invest').style.width = barPct(investment) + '%';
+  document.getElementById('bar-invest').textContent = fmt(investment);
+  document.getElementById('bar-net').style.width = barPct(yr1Net) + '%';
+  document.getElementById('bar-net').style.background = yr1Net >= 0 ? '#38a169' : '#e53e3e';
+  document.getElementById('bar-net').textContent = (yr1Net >= 0 ? '+' : '') + fmt(yr1Net);
+  document.getElementById('bar-5yr').style.width = barPct(yr5) + '%';
+  document.getElementById('bar-5yr').textContent = fmt(yr5);
+
+  document.getElementById('narrative').innerHTML = `
+    <strong>The story in plain English:</strong> Your plant currently loses approximately <strong>${fmtFull(currentRisk)}/year</strong> from valve-caused unplanned shutdowns
+    (${trips} events × ${hrs} hours × ${fmtFull(cph)}/hour). Installing DVC6200 positioners on your ${valves} critical valves costs
+    <strong>${fmtFull(investment)}</strong> as a one-time investment. At a <strong>${Math.round(redPct*100)}% reduction</strong> in unplanned trips — the typical result from active HART friction monitoring —
+    you save <strong>${fmtFull(annualSavings)} per year</strong>. Payback in <strong>${paybackMonths.toFixed(1)} months</strong>.
+    Over 5 years the program returns <strong>${fmtFull(yr5)}</strong> in avoided losses.
+  `;
+
+  document.getElementById('salesScript').textContent =
+    `"Based on the numbers you gave me — ${trips} valve-caused shutdowns per year, ${hrs} hours each at ${fmtFull(cph)}/hour — you're losing ${fmtFull(currentRisk)} a year that you don't have to. ` +
+    `Installing DVC6200 positioners on your ${valves} critical valves is a ${fmtFull(investment)} investment. ` +
+    `Plants that run our diagnostic monitoring program cut those trips by ${Math.round(redPct*100)}% or more. ` +
+    `That's ${fmtFull(annualSavings)} a year back in your pocket — payback in ${paybackMonths.toFixed(1)} months. ` +
+    `I can show you the friction trending data from plants just like yours. When do you want to start the baseline?"`;
+}
+
+calc();
+</script>
+</body>
+</html>

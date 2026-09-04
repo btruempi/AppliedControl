@@ -1,0 +1,334 @@
+/* ============================================================
+   Applied Control — Valve Automation Mastery
+   Custom stylesheet for WOW-level presentation
+   ============================================================ */
+
+/* ── Google Font Enhancement ── */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ── Brand Colors ── */
+:root {
+  --ac-teal:        #00796b;
+  --ac-teal-light:  #26a69a;
+  --ac-teal-dark:   #004d40;
+  --ac-orange:      #f57c00;
+  --ac-orange-light:#ff9800;
+  --ac-navy:        #0a1628;
+  --ac-slate:       #1e3a5f;
+  --ac-silver:      #eceff1;
+  --ac-white:       #ffffff;
+  --ac-text:        #1a2332;
+  --ac-muted:       #546e7a;
+}
+
+/* ── Hero Banner ── */
+.ac-hero {
+  background: linear-gradient(135deg, var(--ac-navy) 0%, var(--ac-slate) 50%, var(--ac-teal-dark) 100%);
+  color: white;
+  padding: 4rem 2rem;
+  margin: -1.2rem -1.6rem 2rem -1.6rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ac-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2326a69a' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.ac-hero h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: white !important;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.ac-hero .ac-hero-sub {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+.ac-hero .ac-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.ac-stat {
+  text-align: center;
+}
+
+.ac-stat .num {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ac-orange-light);
+  line-height: 1;
+}
+
+.ac-stat .label {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
+/* ── Path Cards ── */
+.ac-paths {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+
+.ac-path-card {
+  border: 2px solid var(--ac-teal);
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: var(--ac-white);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: var(--ac-text) !important;
+  display: block;
+}
+
+.ac-path-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,121,107,0.18);
+}
+
+.ac-path-card .path-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.ac-path-card .path-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ac-teal-dark);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.ac-path-card .path-desc {
+  font-size: 0.85rem;
+  color: var(--ac-muted);
+  line-height: 1.5;
+}
+
+.ac-path-card .path-time {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  background: var(--ac-silver);
+  color: var(--ac-slate);
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* ── Product Matrix Cards ── */
+.ac-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.ac-product-card {
+  background: linear-gradient(145deg, #f8fffe, #e8f5e9);
+  border-left: 4px solid var(--ac-teal);
+  border-radius: 8px;
+  padding: 1.2rem 1.4rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.ac-product-card h4 {
+  color: var(--ac-teal-dark);
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.ac-product-card .products {
+  font-size: 0.82rem;
+  color: var(--ac-muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.ac-product-card .chapters {
+  font-size: 0.78rem;
+  color: var(--ac-orange);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* ── Custom Admonition Types ── */
+
+/* Plain English */
+.md-typeset .admonition.plain-english,
+.md-typeset details.plain-english {
+  border-color: #1565c0;
+}
+.md-typeset .plain-english > .admonition-title,
+.md-typeset .plain-english > summary {
+  background-color: rgba(21, 101, 192, 0.1);
+  color: #1565c0;
+}
+.md-typeset .plain-english > .admonition-title::before,
+.md-typeset .plain-english > summary::before {
+  background-color: #1565c0;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>");
+}
+
+/* Field Story */
+.md-typeset .admonition.story,
+.md-typeset details.story {
+  border-color: #6a1b9a;
+}
+.md-typeset .story > .admonition-title,
+.md-typeset .story > summary {
+  background-color: rgba(106, 27, 154, 0.1);
+  color: #6a1b9a;
+}
+
+/* Dollar Impact */
+.md-typeset .admonition.dollars,
+.md-typeset details.dollars {
+  border-color: #2e7d32;
+}
+.md-typeset .dollars > .admonition-title,
+.md-typeset .dollars > summary {
+  background-color: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+}
+
+/* ── Chapter Cards on homepage ── */
+.ac-chapter-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 2rem;
+}
+
+.ac-chapter-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  background: var(--ac-silver);
+  text-decoration: none !important;
+  color: var(--ac-text) !important;
+  transition: background 0.15s ease;
+  border-left: 3px solid var(--ac-teal);
+}
+
+.ac-chapter-item:hover {
+  background: #b2dfdb;
+}
+
+.ac-chapter-item .ch-num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ac-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  min-width: 2.5rem;
+  margin-top: 0.15rem;
+}
+
+.ac-chapter-item .ch-title {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ac-slate);
+}
+
+/* ── Value Banner ── */
+.ac-value-banner {
+  background: linear-gradient(90deg, var(--ac-teal-dark), var(--ac-slate));
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ac-value-banner .icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.ac-value-banner h3 {
+  color: white !important;
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.ac-value-banner p {
+  margin: 0;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9rem;
+}
+
+/* ── Finder Tool Embed ── */
+.ac-tool-embed {
+  border: 2px solid var(--ac-teal);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 20px rgba(0,121,107,0.15);
+}
+
+.ac-tool-embed iframe {
+  width: 100%;
+  border: none;
+  display: block;
+}
+
+/* ── Dark mode adjustments ── */
+[data-md-color-scheme="slate"] .ac-path-card {
+  background: #1e2d3d;
+  border-color: var(--ac-teal-light);
+  color: #e0e0e0 !important;
+}
+
+[data-md-color-scheme="slate"] .ac-path-card .path-title {
+  color: var(--ac-teal-light);
+}
+
+[data-md-color-scheme="slate"] .ac-chapter-item {
+  background: #1e2d3d;
+  color: #e0e0e0 !important;
+}
+
+[data-md-color-scheme="slate"] .ac-product-card {
+  background: linear-gradient(145deg, #1e2d3d, #162330);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .ac-hero h1 { font-size: 1.8rem; }
+  .ac-hero { padding: 2.5rem 1rem; }
+  .ac-stats { gap: 1.5rem; }
+}

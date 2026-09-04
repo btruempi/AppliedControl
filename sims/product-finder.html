@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fisher Valve Product Finder — Applied Control</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f0f4f8;
+    color: #1a2332;
+    min-height: 100vh;
+    padding: 1.5rem;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, #0a1628, #1e3a5f, #004d40);
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.4rem; }
+  header p { color: rgba(255,255,255,0.8); font-size: 0.95rem; }
+
+  .step-indicator {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .step-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 700;
+    background: #cbd5e0; color: #718096;
+    transition: all 0.3s ease;
+  }
+
+  .step-dot.active { background: #00796b; color: white; transform: scale(1.15); }
+  .step-dot.done { background: #26a69a; color: white; }
+
+  .question-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 1rem;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-card h2 {
+    font-size: 1.25rem; font-weight: 600;
+    color: #004d40; margin-bottom: 0.5rem;
+  }
+
+  .question-card .q-context {
+    font-size: 0.85rem; color: #718096; margin-bottom: 1.2rem;
+    line-height: 1.5;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .option-btn {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    background: white;
+    transition: all 0.2s ease;
+    text-align: left;
+    display: flex; flex-direction: column; gap: 0.3rem;
+  }
+
+  .option-btn:hover {
+    border-color: #00796b;
+    background: #e8f5e9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,121,107,0.15);
+  }
+
+  .option-btn .opt-icon { font-size: 1.6rem; }
+  .option-btn .opt-label { font-weight: 600; font-size: 0.9rem; color: #1a2332; }
+  .option-btn .opt-hint { font-size: 0.78rem; color: #718096; line-height: 1.4; }
+
+  .result-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-top: 5px solid #00796b;
+    animation: slideIn 0.4s ease;
+  }
+
+  .result-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; flex-wrap: wrap;
+  }
+
+  .result-badge {
+    background: linear-gradient(135deg, #00796b, #004d40);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .result-product {
+    font-size: 1.6rem; font-weight: 700; color: #004d40;
+  }
+
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .spec-item {
+    background: #f0fdf4;
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    border-left: 3px solid #00796b;
+  }
+
+  .spec-item .spec-label {
+    font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #718096; margin-bottom: 0.3rem;
+  }
+
+  .spec-item .spec-value {
+    font-size: 0.92rem; font-weight: 600; color: #1a2332;
+    font-family: 'Courier New', monospace;
+  }
+
+  .why-box {
+    background: #fffbeb;
+    border: 1px solid #f59e0b;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+  }
+
+  .why-box h4 { color: #92400e; font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .why-box p { font-size: 0.88rem; color: #78350f; line-height: 1.6; }
+
+  .sales-box {
+    background: #eff6ff;
+    border: 1px solid #3b82f6;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+  }
+
+  .sales-box h4 { color: #1e40af; font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .sales-box p { font-size: 0.88rem; color: #1e3a8a; line-height: 1.6; }
+
+  .positioner-rec {
+    background: #faf5ff;
+    border: 1px solid #8b5cf6;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+  }
+
+  .positioner-rec h4 { color: #5b21b6; font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .positioner-rec p { font-size: 0.88rem; color: #4c1d95; line-height: 1.6; }
+
+  .action-row {
+    display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem;
+  }
+
+  .btn {
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary { background: #00796b; color: white; }
+  .btn-primary:hover { background: #004d40; transform: translateY(-1px); }
+  .btn-secondary { background: #e2e8f0; color: #4a5568; }
+  .btn-secondary:hover { background: #cbd5e0; }
+
+  .breadcrumb {
+    display: flex; gap: 0.5rem; align-items: center;
+    flex-wrap: wrap; margin-bottom: 1rem;
+    font-size: 0.82rem; color: #718096;
+  }
+
+  .breadcrumb .crumb {
+    background: #e2e8f0; padding: 0.2rem 0.6rem;
+    border-radius: 4px; color: #4a5568;
+  }
+
+  .breadcrumb .sep { color: #cbd5e0; }
+
+  .progress-bar {
+    height: 4px; background: #e2e8f0;
+    border-radius: 2px; margin-bottom: 1rem; overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #00796b, #26a69a);
+    border-radius: 2px; transition: width 0.4s ease;
+  }
+
+  @media (max-width: 500px) {
+    body { padding: 1rem; }
+    header h1 { font-size: 1.4rem; }
+    .options { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>🔍 Fisher Valve Product Finder</h1>
+  <p>Answer 4 questions — get the right Fisher valve recommendation with the technical reason why</p>
+</header>
+
+<div class="step-indicator" id="stepIndicator"></div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div id="breadcrumb" class="breadcrumb"></div>
+<div id="app"></div>
+
+</div>
+<script>
+const questions = [
+  {
+    id: 'purpose',
+    text: 'What are you trying to control?',
+    context: 'The type of variable being controlled determines the valve body style and trim design needed.',
+    options: [
+      { icon: '💧', label: 'Liquid Flow', hint: 'Water, oil, chemicals, slurries', value: 'liquid' },
+      { icon: '💨', label: 'Gas / Vapor Flow', hint: 'Steam, natural gas, air, process gas', value: 'gas' },
+      { icon: '🌡️', label: 'Temperature', hint: 'Reactor cooling, heat exchangers', value: 'temp' },
+      { icon: '📊', label: 'Pressure', hint: 'Header pressure, back-pressure control', value: 'pressure' },
+    ]
+  },
+  {
+    id: 'fluid',
+    text: 'How "difficult" is the fluid?',
+    context: 'Fluid properties drive trim and body material selection. Difficult fluids need special designs.',
+    options: [
+      { icon: '✅', label: 'Clean & Standard', hint: 'Water, clean hydrocarbons, air', value: 'clean' },
+      { icon: '⚗️', label: 'Corrosive / Aggressive', hint: 'Acids, caustics, H₂S, chlorine', value: 'corrosive' },
+      { icon: '🪨', label: 'Abrasive / Has Solids', hint: 'Slurry, produced water, sludge', value: 'solids' },
+      { icon: '🧪', label: 'Sanitary / Pure', hint: 'WFI, food/bev, pharmaceutical', value: 'sanitary' },
+    ]
+  },
+  {
+    id: 'pressure',
+    text: 'What\'s the operating pressure range?',
+    context: 'Pressure class determines the valve body rating (ANSI Class) and acceptable trim materials.',
+    options: [
+      { icon: '🟢', label: 'Low — Under 150 PSIG', hint: 'Utilities, water systems, HVAC', value: 'low' },
+      { icon: '🟡', label: 'Medium — 150–600 PSIG', hint: 'Most process service', value: 'medium' },
+      { icon: '🔴', label: 'High — 600–2500 PSIG', hint: 'Hydroprocessing, steam turbine', value: 'high' },
+      { icon: '⚡', label: 'Very High ΔP / Severe', hint: 'Wellhead choke, let-down valves', value: 'severe' },
+    ]
+  },
+  {
+    id: 'priority',
+    text: 'What\'s the #1 priority?',
+    context: 'The most important design requirement drives trim selection and feature specification.',
+    options: [
+      { icon: '🎯', label: 'Precise Control', hint: 'Tight rangeability, repeatable positioning', value: 'control' },
+      { icon: '🔇', label: 'Noise / Cavitation', hint: 'Loud valves, flashing, vibration', value: 'noise' },
+      { icon: '🛡️', label: 'Safety / Shutoff', hint: 'SIS service, SIL rating, tight cutoff', value: 'safety' },
+      { icon: '🔩', label: 'Reliability / Low Maint.', hint: 'Hard-to-reach, long intervals', value: 'reliability' },
+    ]
+  }
+];
+
+const recommendations = {
+  // Liquid + Clean
+  'liquid-clean-low-control':      { valve:'Fisher EZ', body:'1–4" globe, Class 150/300', trim:'Equal percentage, PTFE packing', actuator:'667 spring-diaphragm', positioner:'DVC2000', why:'The EZ is the workhorse globe valve for standard liquid service. Equal-percentage trim handles the nonlinear pressure drop across most loops. The 667 actuator provides reliable fail-closed action.', sales:'Ask about loop stability — if they have hunting or overshooting problems, the EZ + DVC2000 with autotune will fix it in one visit.' },
+  'liquid-clean-low-noise':        { valve:'Fisher EZ + Cavitrol III', body:'1–4" globe, Class 150/300', trim:'Multi-stage Cavitrol III trim', actuator:'667 spring-diaphragm', positioner:'DVC6200', why:'When liquid drops in pressure rapidly, dissolved gas flashes to vapor and collapses — cavitation. Cavitrol III trim stages the pressure drop to prevent vapor pocket formation entirely.', sales:'Ask if they hear crackling or machine-gun sounds at the valve. That\'s cavitation destroying trim. Cavitrol III pays for itself in avoided trim replacements.' },
+  'liquid-clean-medium-control':   { valve:'Fisher ED', body:'2–6" globe, Class 300/600', trim:'Equal percentage, hardened trim', actuator:'667 or 657 spring-diaphragm', positioner:'DVC6200', why:'The ED handles higher pressure classes with heavy-duty construction. Ideal for refinery and chemical service where conditions are moderate but demanding.' , sales:'The ED + DVC6200 diagnostic combination gives you HART-based friction trending — every repair becomes planned, not reactive.' },
+  'liquid-clean-high-control':     { valve:'Fisher HP', body:'2–6" globe, Class 600–1500', trim:'Contoured plug, hardened trim', actuator:'667 or 585C pneumatic cylinder', positioner:'DVC6200', why:'The HP series handles high-pressure, high-temperature service with heavy-duty bodies and premium trim materials. Standard in hydroprocessing and steam service.', sales:'HP valves in high-pressure service are always critical. Lead with the DVC6200 diagnostic program — one avoided trip at a refinery pays for years of monitoring.' },
+  'liquid-clean-severe-noise':     { valve:'Fisher HP + WhisperFlo', body:'Class 900–2500', trim:'WhisperFlo cage trim', actuator:'585C pneumatic cylinder', positioner:'DVC6200', why:'WhisperFlo trim uses tortuous-path flow passages to convert pressure energy to heat rather than sound — critical for high-ΔP liquid service where noise exceeds 90 dBA.', sales:'If the customer has a valve they can\'t stand next to, WhisperFlo is the answer. Calculate the noise level with the IEC 60534-8 method before the meeting.' },
+  'liquid-solids-low-control':     { valve:'Fisher Vee-Ball V150', body:'2–8" rotary, Class 150/300', trim:'V-notch ball, hardened trim', actuator:'1061 or Bettis rotary', positioner:'DVC6200', why:'The V-notch shearing action of the Vee-Ball cuts through fibers, solids, and slurry that would pack into and destroy a globe valve. Standard for produced water, sludge, and pulp.', sales:'Ask what trim they\'re currently replacing and how often. Vee-Ball trim lasts 3–5x longer than globe trim in solids service.' },
+  'liquid-solids-medium-control':  { valve:'Fisher Vee-Ball V200/V300', body:'3–12" rotary, Class 300/600', trim:'V-notch ball, tungsten carbide option', actuator:'Bettis or 1061 pneumatic', positioner:'DVC6200', why:'Larger bore V-series for higher-flow solids service. Tungsten carbide trim option for highly abrasive applications like FGD slurry.', sales:'If they\'re replacing trim every 6 months, calculate the annual maintenance cost vs. tungsten carbide option — the math usually favors upgrade.' },
+  'liquid-corrosive-low-control':  { valve:'Fisher D3', body:'1–3" globe, high-alloy body', trim:'Hastelloy C, ceramic, or titanium', actuator:'667 spring-diaphragm', positioner:'DVC6200', why:'The D3 is designed for corrosive and high-purity service with body and trim materials matched to the chemical environment. Common in acid dosing, caustic scrubbing, and chemical feed.', sales:'Always ask for a fluid composition spec sheet. The wrong trim material in acid service means a valve replacement in 6 months instead of 6 years.' },
+  'liquid-sanitary-low-control':   { valve:'Fisher V-Series Sanitary', body:'1–3" sanitary, tri-clamp, 316L', trim:'EPDM or silicone seat, zero dead leg', actuator:'667 or 1061 with sanitary mount', positioner:'DVC6200 with HART audit', why:'3-A certified sanitary ball valve with electropolished 316L wetted surfaces, tri-clamp connections, and no dead legs. FDA 21 CFR Part 11 compliant with DVC6200 HART audit trail.', sales:'For pharma customers, ask about their IQ/OQ documentation burden. Applied Control can provide a pre-formatted IQ/OQ package — that\'s 10–20 engineering hours saved per valve.' },
+  'gas-clean-low-control':         { valve:'Fisher EZ', body:'1–4" globe, Class 150/300', trim:'Linear or equal-percentage, PTFE packing', actuator:'667 spring-diaphragm', positioner:'DVC2000 or DVC6200', why:'For low-pressure gas service the EZ globe valve is ideal. Linear trim suits pressure-drop-dominated gas loops; equal-percentage is preferred when ΔP/P₁ varies with flow.', sales:'Gas control loops often have noise issues because of high velocity through the seat. Ask if they hear hissing or rattling at the valve.' },
+  'gas-clean-medium-noise':        { valve:'Fisher EZ + WhisperFlo', body:'2–6" globe, Class 300/600', trim:'WhisperFlo multi-hole cage', actuator:'667 spring-diaphragm', positioner:'DVC6200', why:'WhisperFlo\'s tortuous-path trim reduces gas velocity at each restriction point — aerodynamic noise is reduced by 10–20 dBA for high-ΔP gas. Eliminates OSHA noise exposure violations near valves.', sales:'Ask what the noise level is at the valve station. Over 85 dBA requires hearing protection — WhisperFlo brings it under the limit and removes that compliance burden.' },
+  'gas-clean-high-control':        { valve:'Fisher HP', body:'2–6" globe, Class 600–1500', trim:'Hardened globe trim', actuator:'585C pneumatic cylinder', positioner:'DVC6200', why:'High-pressure gas needs robust body construction and trim materials that handle velocity erosion. HP series covers Class 600 through 2500 with appropriate metallurgy for each pressure class.', sales:'Ask about their safety case — is this valve in a SIL-rated loop? If so, the DVC6200 PST capability is a major requirement.' },
+  'gas-clean-severe-noise':        { valve:'Fisher HP + WhisperFlo', body:'Class 900–2500', trim:'WhisperFlo multi-stage', actuator:'585C or 1305C pneumatic cylinder', positioner:'DVC6200', why:'Letdown applications with very high ΔP (gas going from high to low pressure) produce extreme noise unless trim stages the expansion. WhisperFlo is the standard solution for wellhead and pipeline letdown.', sales:'Calculate noise using IEC 60534-8-3 method. Show them the predicted dBA without WhisperFlo vs. with it — the compliance argument sells the upgrade.' },
+  'gas-clean-low-safety':          { valve:'Fisher EZ (fail-closed)', body:'1–4" globe, Class 150/300', trim:'PTFE packing, metal seat', actuator:'667 fail-closed (spring extends)', positioner:'DVC6200 with PST', why:'Fail-closed design: spring action closes the valve on air failure. DVC6200 partial stroke test (PST) proves the safety function works without a full process shutdown — required for IEC 61511 SIL-rated service.', sales:'Ask if this valve is in their SIS. If SIL-rated, they need documented PST results. DVC6200 generates the PST report automatically — that\'s their proof-test documentation.' },
+  'gas-clean-medium-safety':       { valve:'Fisher ED (fail-closed)', body:'2–6" globe, Class 300/600', trim:'Metal seat, Class IV shutoff', actuator:'667 fail-closed', positioner:'DVC6200 with PST and SIL certification', why:'The DVC6200 is SIL 2-capable as a final element component, with TÜV certification. For safety shutdown valves, the PST function is often the only way to proof-test without shutting down the process.', sales:'If the customer is doing IEC 61511 compliance, Applied Control can help them with the PFD calculation showing the DVC6200 contribution to SIL achievement.' },
+  'pressure-clean-low-control':    { valve:'Fisher 627 Self-Contained Regulator', body:'1–2" spring-loaded regulator', trim:'Integral seat, spring-loaded', actuator:'Self-contained (no air required)', positioner:'None needed', why:'The Fisher 627 needs no instrument air — it senses outlet pressure directly and modulates the valve to maintain setpoint. Perfect for remote pump stations, gas distribution, and steam PRV service where no air supply exists.', sales:'Regulators are often overlooked — ask about pump stations, gas let-down stations, and steam header pressure control where no instrument air is available.' },
+  'pressure-clean-medium-control': { valve:'Fisher EZ or ED (back-pressure)', body:'2–6" globe, Class 300/600', trim:'Characterized for gas/steam ΔP', actuator:'657 fail-open (spring extends)', positioner:'DVC6200', why:'Fail-open actuator (657) ensures the back-pressure control valve opens on air failure — pressure defaults to venting rather than building up. Critical for compressor protection and header pressure control.', sales:'Ask about their compressor protection — if the back-pressure valve is downstream of a compressor, a fail-closed on air failure means compressor surge.' },
+  'temp-clean-medium-control':     { valve:'Fisher EZ or ED', body:'2–4" globe, Class 300', trim:'Equal-percentage (steam service)', actuator:'667 fail-closed (steam shutoff on air fail)', positioner:'DVC6200', why:'Temperature loops typically use steam to a heat exchanger, with the control valve on the steam supply. Fail-closed (667) is standard — steam shuts off on air failure, preventing overheating. Equal-percentage trim matches the nonlinear heat transfer curve.', sales:'Ask about their steam trap program. A failing steam trap on the same heat exchanger as a new control valve wastes all the efficiency gains — Applied Control can audit traps at the same time.' },
+
+  // Fallback for any combination not explicitly mapped
+  'default': { valve:'Fisher ED Globe Valve', body:'Class 300, carbon steel', trim:'Standard equal-percentage', actuator:'667 spring-diaphragm (fail-closed)', positioner:'DVC6200', why:'The Fisher ED is the most versatile control valve in the Applied Control portfolio — handles the majority of process service with the right trim and actuator configuration.', sales:'Schedule a full application review — bring the process data sheet and we\'ll specify the complete valve, actuator, and positioner package for your specific conditions.' }
+};
+
+let answers = {};
+let currentStep = 0;
+const stepLabels = ['What', 'Fluid', 'Pressure', 'Priority'];
+
+function getRecommendation() {
+  const key = [answers.purpose, answers.fluid, answers.pressure, answers.priority].join('-');
+  return recommendations[key] || recommendations['default'];
+}
+
+function renderSteps() {
+  const indicator = document.getElementById('stepIndicator');
+  const fill = document.getElementById('progressFill');
+  indicator.innerHTML = '';
+  stepLabels.forEach((label, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot' + (i < currentStep ? ' done' : '') + (i === currentStep ? ' active' : '');
+    dot.textContent = i < currentStep ? '✓' : (i + 1);
+    dot.title = label;
+    indicator.appendChild(dot);
+  });
+  fill.style.width = (currentStep / questions.length * 100) + '%';
+}
+
+function renderBreadcrumb() {
+  const bc = document.getElementById('breadcrumb');
+  const parts = [];
+  if (answers.purpose) parts.push({label: {liquid:'Liquid',gas:'Gas',temp:'Temperature',pressure:'Pressure'}[answers.purpose] || answers.purpose});
+  if (answers.fluid) parts.push({label: {clean:'Clean Fluid',corrosive:'Corrosive',solids:'With Solids',sanitary:'Sanitary'}[answers.fluid] || answers.fluid});
+  if (answers.pressure) parts.push({label: {low:'Low Pressure',medium:'Medium Pressure',high:'High Pressure',severe:'Severe Service'}[answers.pressure] || answers.pressure});
+  bc.innerHTML = parts.map((p,i) => `<span class="crumb">${p.label}</span>${i < parts.length-1 ? '<span class="sep">›</span>' : ''}`).join('');
+}
+
+function renderQuestion(step) {
+  const q = questions[step];
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="question-card">
+      <h2>Step ${step+1} of ${questions.length}: ${q.text}</h2>
+      <p class="q-context">${q.context}</p>
+      <div class="options">
+        ${q.options.map(o => `
+          <button class="option-btn" onclick="selectAnswer('${q.id}','${o.value}')">
+            <span class="opt-icon">${o.icon}</span>
+            <span class="opt-label">${o.label}</span>
+            <span class="opt-hint">${o.hint}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>`;
+}
+
+function renderResult() {
+  const rec = getRecommendation();
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <span class="result-badge">✅ Recommended</span>
+        <span class="result-product">${rec.valve}</span>
+      </div>
+
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="spec-label">Valve Body</div>
+          <div class="spec-value">${rec.body}</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Trim / Seat</div>
+          <div class="spec-value">${rec.trim}</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Actuator</div>
+          <div class="spec-value">${rec.actuator}</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Positioner</div>
+          <div class="spec-value">${rec.positioner}</div>
+        </div>
+      </div>
+
+      <div class="why-box">
+        <h4>🔧 Why This Valve</h4>
+        <p>${rec.why}</p>
+      </div>
+
+      <div class="sales-box">
+        <h4>💼 Sales Angle — Use This in the Meeting</h4>
+        <p>${rec.sales}</p>
+      </div>
+
+      <div class="positioner-rec">
+        <h4>📡 Always Add the DVC6200</h4>
+        <p>The FIELDVUE DVC6200 digital valve controller gives you HART-based diagnostics on every valve — friction trending, valve signature, PST for safety valves, and AMS Device Manager integration. It's what separates Applied Control from a catalog distributor. Every Fisher control valve should have a DVC6200 unless the customer has a specific reason not to.</p>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-primary" onclick="restart()">🔄 Start Over — New Application</button>
+        <button class="btn btn-secondary" onclick="window.print()">🖨️ Print Recommendation</button>
+      </div>
+    </div>`;
+}
+
+function selectAnswer(questionId, value) {
+  answers[questionId] = value;
+  currentStep++;
+  renderSteps();
+  renderBreadcrumb();
+  if (currentStep >= questions.length) {
+    document.getElementById('progressFill').style.width = '100%';
+    renderResult();
+  } else {
+    renderQuestion(currentStep);
+  }
+}
+
+function restart() {
+  answers = {};
+  currentStep = 0;
+  renderSteps();
+  renderBreadcrumb();
+  renderQuestion(0);
+}
+
+renderSteps();
+renderBreadcrumb();
+renderQuestion(0);
+</script>
+</body>
+</html>
