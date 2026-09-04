@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Applied Control ROI Suite — Valve Diagnostics, PRV, Coriolis, DeltaV SIS</title>
+<title>Applied Control ROI Calculator Suite</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: #1a2332; min-height: 100vh; padding: 1.5rem; }
@@ -69,7 +69,7 @@
 
 <header>
   <h1>📊 Applied Control ROI Calculator Suite</h1>
-  <p>Four calculators — DVC6200 Diagnostics · PRV Testing Program · Coriolis Accuracy · DeltaV SIS</p>
+  <p>Six calculators — DVC6200 Diagnostics · PRV Testing · Coriolis Accuracy · DeltaV SIS · WirelessHART · AMS Machinery Health</p>
 </header>
 
 <!-- Tab bar -->
@@ -78,6 +78,8 @@
   <button class="tab-btn" onclick="switchTab('prv')">🛡️ PRV Testing Program</button>
   <button class="tab-btn" onclick="switchTab('coriolis')">💧 Coriolis Accuracy</button>
   <button class="tab-btn" onclick="switchTab('sis')">🚨 DeltaV SIS</button>
+  <button class="tab-btn" onclick="switchTab('wireless')">📡 WirelessHART</button>
+  <button class="tab-btn" onclick="switchTab('machinery')">⚙️ Machinery Health</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -314,6 +316,132 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════
+     PANEL 5: WIRELESSHART SAVINGS
+════════════════════════════════════════════════════════ -->
+<div class="calc-panel" id="panel-wireless">
+  <div class="panel-header">
+    <h3>📡 WirelessHART Installation Savings</h3>
+    <p>Rosemount 3051 · 644 · 648 · Smart Wireless Gateway 1420 · No wiring cost</p>
+  </div>
+  <div class="card">
+    <h2>Your Wireless Project Numbers</h2>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>New Measurement Points Needed</label>
+        <div class="hint">Remote tanks, rotating equipment, new monitoring points</div>
+        <input type="number" id="w-numPoints" value="30" min="1" max="2000" oninput="calcWireless()">
+      </div>
+      <div class="input-group">
+        <label>Installed Cost Per Wired Run</label>
+        <div class="hint">Conduit, cable pull, junction boxes, termination labor. Typical: $3,000–$8,000/run</div>
+        <div class="input-row"><span class="prefix">$</span><input type="number" id="w-wiringCost" value="4500" min="500" max="50000" step="250" oninput="calcWireless()"></div>
+      </div>
+      <div class="input-group">
+        <label>WirelessHART Device Cost Each</label>
+        <div class="hint">Rosemount 3051 wireless: ~$1,200–$1,800. 648 temperature: ~$900–$1,400</div>
+        <div class="input-row"><span class="prefix">$</span><input type="number" id="w-deviceCost" value="1500" min="500" max="10000" step="100" oninput="calcWireless()"></div>
+      </div>
+      <div class="input-group">
+        <label>Gateways Required</label>
+        <div class="hint">Smart Wireless Gateway 1420 handles up to 100 devices. Typical: 1 per 60–80 devices</div>
+        <input type="number" id="w-gateways" value="1" min="1" max="20" oninput="calcWireless()">
+      </div>
+      <div class="input-group">
+        <label>Gateway Cost (Installed)</label>
+        <div class="hint">Rosemount 1420 gateway: ~$8,000–$12,000 installed including DCS integration</div>
+        <div class="input-row"><span class="prefix">$</span><input type="number" id="w-gatewayCost" value="10000" min="2000" max="50000" step="500" oninput="calcWireless()"></div>
+      </div>
+      <div class="input-group">
+        <label>Annual Calibration Cost Per Point (Wired)</label>
+        <div class="hint">Current manual calibration cost per instrument per year. Typical: $300–$800</div>
+        <div class="input-row"><span class="prefix">$</span><input type="number" id="w-annualMaint" value="500" min="50" max="5000" step="50" oninput="calcWireless()"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>ROI Results</h2>
+    <div class="result-grid">
+      <div class="result-tile orange"><div class="r-label">Wired Install Cost</div><div class="r-value" id="w-r1">—</div><div class="r-unit">cable + devices fully installed</div></div>
+      <div class="result-tile blue"><div class="r-label">WirelessHART Total Cost</div><div class="r-value" id="w-r2">—</div><div class="r-unit">devices + gateway(s)</div></div>
+      <div class="result-tile teal"><div class="r-label">Upfront Savings</div><div class="r-value" id="w-r3">—</div><div class="r-unit">avoided wiring cost</div></div>
+      <div class="result-tile green"><div class="r-label">Annual Maintenance Savings</div><div class="r-value" id="w-r4">—</div><div class="r-unit">reduced calibration rounds</div></div>
+      <div class="result-tile purple"><div class="r-label">5-Year Total Benefit</div><div class="r-value" id="w-r5">—</div><div class="r-unit">upfront + 5 years maintenance</div></div>
+    </div>
+    <div class="chart-area">
+      <div class="bar-item"><div class="bar-label">Wired installation (cable + devices)</div><div class="bar-track"><div class="bar-fill" id="w-bar1" style="background:#e53e3e;">$0</div></div></div>
+      <div class="bar-item"><div class="bar-label">WirelessHART (devices + gateways)</div><div class="bar-track"><div class="bar-fill" id="w-bar2" style="background:#3182ce;">$0</div></div></div>
+      <div class="bar-item"><div class="bar-label">Upfront installation savings</div><div class="bar-track"><div class="bar-fill" id="w-bar3" style="background:#38a169;">$0</div></div></div>
+      <div class="bar-item"><div class="bar-label">Annual maintenance savings (HART diagnostics)</div><div class="bar-track"><div class="bar-fill" id="w-bar4" style="background:#00796b;">$0</div></div></div>
+    </div>
+    <div id="w-narrative" class="narrative"></div>
+    <div class="sales-script"><h4>💼 WirelessHART Sales Script</h4><p id="w-script">Enter your numbers above to generate a customized sales script.</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL 6: AMS MACHINERY HEALTH
+════════════════════════════════════════════════════════ -->
+<div class="calc-panel" id="panel-machinery">
+  <div class="panel-header">
+    <h3>⚙️ AMS Machinery Health Manager ROI</h3>
+    <p>Emerson CSI 2140 Vibration Analyzer · AMS Machinery Health Manager · Condition-Based Maintenance</p>
+  </div>
+  <div class="card">
+    <h2>Your Rotating Equipment Numbers</h2>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Critical Rotating Machines</label>
+        <div class="hint">Pumps, compressors, turbines, fans — assets where failure stops production</div>
+        <input type="number" id="m-numMachines" value="40" min="1" max="5000" oninput="calcMachinery()">
+      </div>
+      <div class="input-group">
+        <label>Unplanned Failures Per Year</label>
+        <div class="hint">Current bearing failures, seal failures, impeller damage across all critical machines</div>
+        <input type="number" id="m-failuresPerYear" value="6" min="0" max="200" step="0.5" oninput="calcMachinery()">
+      </div>
+      <div class="input-group">
+        <label>Average Cost Per Failure</label>
+        <div class="hint">Parts + emergency labor + lost production + expediting. Pump: $25K–$75K; compressor: $150K–$500K</div>
+        <div class="input-row"><span class="prefix">$</span><input type="number" id="m-costPerFailure" value="60000" min="5000" max="5000000" step="5000" oninput="calcMachinery()"></div>
+      </div>
+      <div class="input-group">
+        <label>Annual Fixed PM Cost</label>
+        <div class="hint">Current time-based maintenance labor + parts regardless of machine condition</div>
+        <div class="input-row"><span class="prefix">$</span><input type="number" id="m-currentPMCost" value="200000" min="10000" max="5000000" step="10000" oninput="calcMachinery()"></div>
+      </div>
+      <div class="input-group">
+        <label>AMS Machinery Investment</label>
+        <div class="hint">CSI 2140 analyzers + AMS software + installed transducers. Typical: $50K–$300K</div>
+        <div class="input-row"><span class="prefix">$</span><input type="number" id="m-investment" value="150000" min="10000" max="2000000" step="10000" oninput="calcMachinery()"></div>
+      </div>
+      <div class="input-group">
+        <label>Expected Failure Detection Rate (%)</label>
+        <div class="hint">AMS typically detects 70–85% of developing faults 4–8 weeks before failure</div>
+        <input type="number" id="m-detectionRate" value="75" min="20" max="95" step="5" oninput="calcMachinery()">
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>ROI Results</h2>
+    <div class="result-grid">
+      <div class="result-tile orange"><div class="r-label">Current Annual Failure Cost</div><div class="r-value" id="m-r1">—</div><div class="r-unit">unplanned machine failures/year</div></div>
+      <div class="result-tile teal"><div class="r-label">Avoided Failure Savings</div><div class="r-value" id="m-r2">—</div><div class="r-unit">failures caught before catastrophe</div></div>
+      <div class="result-tile green"><div class="r-label">PM Labor Savings</div><div class="r-value" id="m-r3">—</div><div class="r-unit">CBM replaces fixed PM schedule</div></div>
+      <div class="result-tile blue"><div class="r-label">Payback Period</div><div class="r-value" id="m-r4">—</div><div class="r-unit">months to break even</div></div>
+      <div class="result-tile purple"><div class="r-label">5-Year Net Savings</div><div class="r-value" id="m-r5">—</div><div class="r-unit">total benefit minus investment</div></div>
+    </div>
+    <div class="chart-area">
+      <div class="bar-item"><div class="bar-label">Current annual unplanned failure cost</div><div class="bar-track"><div class="bar-fill" id="m-bar1" style="background:#e53e3e;">$0</div></div></div>
+      <div class="bar-item"><div class="bar-label">Annual avoided failure savings</div><div class="bar-track"><div class="bar-fill" id="m-bar2" style="background:#38a169;">$0</div></div></div>
+      <div class="bar-item"><div class="bar-label">Annual PM labor savings (condition-based)</div><div class="bar-track"><div class="bar-fill" id="m-bar3" style="background:#00796b;">$0</div></div></div>
+      <div class="bar-item"><div class="bar-label">One-time AMS investment</div><div class="bar-track"><div class="bar-fill" id="m-bar4" style="background:#3182ce;">$0</div></div></div>
+    </div>
+    <div id="m-narrative" class="narrative"></div>
+    <div class="sales-script"><h4>💼 AMS Machinery Health Sales Script</h4><p id="m-script">Enter your numbers above to generate a customized sales script.</p></div>
+  </div>
+</div>
+
 </div><!-- /container -->
 
 <script>
@@ -509,8 +637,102 @@ function calcSis(){
     `When is your next PHA or LOPA review? That's the right moment to specify this."`;
 }
 
+// ── WIRELESSHART ──────────────────────────────────
+function calcWireless(){
+  const pts=+document.getElementById('w-numPoints').value||0;
+  const wiring=+document.getElementById('w-wiringCost').value||0;
+  const deviceCost=+document.getElementById('w-deviceCost').value||0;
+  const gateways=+document.getElementById('w-gateways').value||0;
+  const gatewayCost=+document.getElementById('w-gatewayCost').value||0;
+  const maint=+document.getElementById('w-annualMaint').value||0;
+
+  const totalWired=(pts*wiring)+(pts*deviceCost);
+  const totalWireless=(pts*deviceCost)+(gateways*gatewayCost);
+  const savings=totalWired-totalWireless;
+  const annualMaintSavings=pts*(maint*0.6); // wireless saves ~60% on calibration rounds due to HART diagnostics
+  const fiveYear=savings+(annualMaintSavings*5);
+
+  document.getElementById('w-r1').textContent=fmt(totalWired);
+  document.getElementById('w-r2').textContent=fmt(totalWireless);
+  document.getElementById('w-r3').textContent=fmt(savings);
+  document.getElementById('w-r4').textContent=fmt(annualMaintSavings);
+  document.getElementById('w-r5').textContent=fmt(fiveYear);
+
+  setBar('w-bar1',totalWired,Math.max(totalWired,totalWireless),'#e53e3e');
+  setBar('w-bar2',totalWireless,Math.max(totalWired,totalWireless),'#3182ce');
+  setBar('w-bar3',savings,totalWired,'#38a169');
+  setBar('w-bar4',annualMaintSavings,totalWired,'#00796b');
+
+  document.getElementById('w-narrative').innerHTML=`
+    <strong>The story in plain English:</strong> Installing ${pts} wired measurement points would cost
+    <strong>${fmtFull(totalWired)}</strong> — that's ${fmtFull(wiring)} per run in conduit, pulling, and termination,
+    plus the instruments. With WirelessHART (Rosemount 3051, 644, 648), the same ${pts} points cost only
+    <strong>${fmtFull(totalWireless)}</strong> — ${gateways} gateway(s) and the devices themselves.
+    You save <strong>${fmtFull(savings)}</strong> upfront. WirelessHART devices also report self-diagnostics
+    continuously, reducing calibration rounds by ~60% — an additional <strong>${fmtFull(annualMaintSavings)}/year</strong>
+    in maintenance savings. Five-year total benefit: <strong>${fmtFull(fiveYear)}</strong>.`;
+
+  document.getElementById('w-script').textContent=
+    `"You have ${pts} new monitoring points you need to add. Running new wired cables at ${fmtFull(wiring)} per run ` +
+    `would cost ${fmtFull(pts*wiring)} before you even buy the instruments. With Rosemount WirelessHART — the same ` +
+    `3051 and 644 transmitters you already know — you eliminate the wiring entirely. One gateway handles up to 100 devices. ` +
+    `Total WirelessHART cost: ${fmtFull(totalWireless)}. That's ${fmtFull(savings)} saved on this project alone. ` +
+    `And the devices self-report diagnostics via HART — your maintenance team doesn't need to walk the plant for calibration checks. ` +
+    `What is your biggest instrument expansion project right now? Let's see what wireless saves you."`;
+}
+
+// ── MACHINERY HEALTH ──────────────────────────────
+function calcMachinery(){
+  const machines=+document.getElementById('m-numMachines').value||0;
+  const failures=+document.getElementById('m-failuresPerYear').value||0;
+  const costPerFailure=+document.getElementById('m-costPerFailure').value||0;
+  const maint=+document.getElementById('m-currentPMCost').value||0;
+  const investment=+document.getElementById('m-investment').value||0;
+  const detect=(+document.getElementById('m-detectionRate').value||75)/100;
+
+  const currentRisk=failures*costPerFailure;
+  const avoidedFailures=failures*detect;
+  const avoidedCost=avoidedFailures*costPerFailure;
+  const pmSavings=maint*0.4; // CBM replaces fixed PM — ~40% PM labor savings
+  const totalAnnual=avoidedCost+pmSavings;
+  const payback=investment>0&&totalAnnual>0?investment/totalAnnual*12:0;
+  const fiveYear=(totalAnnual*5)-investment;
+
+  document.getElementById('m-r1').textContent=fmt(currentRisk);
+  document.getElementById('m-r2').textContent=fmt(avoidedCost);
+  document.getElementById('m-r3').textContent=fmt(pmSavings);
+  document.getElementById('m-r4').textContent=payback>0?payback.toFixed(1)+' mo':'—';
+  document.getElementById('m-r5').textContent=fmt(fiveYear);
+
+  setBar('m-bar1',currentRisk,Math.max(currentRisk,totalAnnual),'#e53e3e');
+  setBar('m-bar2',avoidedCost,Math.max(currentRisk,totalAnnual),'#38a169');
+  setBar('m-bar3',pmSavings,Math.max(currentRisk,totalAnnual),'#00796b');
+  setBar('m-bar4',investment,Math.max(currentRisk,totalAnnual),'#3182ce');
+
+  document.getElementById('m-narrative').innerHTML=`
+    <strong>The story in plain English:</strong> Your ${machines} critical machines average ${failures} failures/year
+    costing <strong>${fmtFull(currentRisk)}</strong>. AMS Machinery Health Manager with CSI 2140 vibration analysis
+    detects <strong>${Math.round(detect*100)}%</strong> of developing faults 4–8 weeks before failure —
+    avoiding <strong>${fmtFull(avoidedCost)}/year</strong> in catastrophic repair costs.
+    Condition-Based Maintenance (CBM) also replaces fixed PM schedules — reducing PM labor by ~40%,
+    saving another <strong>${fmtFull(pmSavings)}/year</strong>.
+    Total annual benefit: <strong>${fmtFull(totalAnnual)}</strong>.
+    Payback on the <strong>${fmtFull(investment)}</strong> investment: <strong>${payback.toFixed(1)} months</strong>.
+    Five-year net: <strong>${fmtFull(fiveYear)}</strong>.`;
+
+  document.getElementById('m-script').textContent=
+    `"You're spending ${fmtFull(currentRisk)}/year on unplanned machine failures across your ${machines} critical assets. ` +
+    `AMS Machinery Health Manager detects bearing failures, imbalance, misalignment, and looseness 4–8 weeks in advance — ` +
+    `converting catastrophic $${Math.round(costPerFailure/1000)}K failures into planned maintenance windows. ` +
+    `At ${Math.round(detect*100)}% detection rate, that's ${fmtFull(avoidedCost)}/year in avoided failures. ` +
+    `You also replace your fixed PM schedule with condition-based maintenance — you only service machines that ` +
+    `actually need it, saving about 40% of your current PM labor: ${fmtFull(pmSavings)}/year. ` +
+    `Total: ${fmtFull(totalAnnual)}/year. Payback in ${payback.toFixed(1)} months. ` +
+    `Which of your assets keeps your maintenance manager up at night? Let's start there."`;
+}
+
 // Init all panels
-calcDvc(); calcPrv(); calcCoriolis(); calcSis();
+calcDvc(); calcPrv(); calcCoriolis(); calcSis(); calcWireless(); calcMachinery();
 </script>
 </body>
 </html>
