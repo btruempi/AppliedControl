@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- CANVAS_HEIGHT: 500 -->
+<!-- Dublin Core Metadata -->
+<meta name="DC.title" content="Cavitation Visualizer MicroSim">
+<meta name="DC.subject" content="cavitation, flashing, vena contracta, control valve, fluid mechanics">
+<meta name="DC.description" content="Interactive visualization of pressure profile through a control valve, showing cavitation and flashing onset based on upstream and downstream pressure.">
+<meta name="DC.creator" content="Applied Control Valve Automation Mastery">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cavitation Visualizer MicroSim</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    height: 502px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #top-bar {
+    background: #0a2342;
+    color: #e8f4f8;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #top-bar span { color: #f39c12; }
+  #main { display: flex; flex: 1; overflow: hidden; }
+  #canvas-area { flex: 1; background: #fff; position: relative; }
+  canvas { display: block; width: 100%; height: 100%; }
+  #side-panel {
+    width: 210px;
+    background: #f0f4f8;
+    border-left: 1px solid #dde5ee;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+  }
+  .ctrl-group {
+    background: #fff;
+    border: 1px solid #dde5ee;
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .ctrl-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #0a2342;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .slider-row label {
+    font-size: 10px;
+    color: #444;
+    width: 56px;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+  .slider-row input[type=range] { flex: 1; height: 4px; accent-color: #0a2342; }
+  .slider-row .val {
+    font-size: 11px;
+    color: #0a2342;
+    font-weight: 700;
+    width: 42px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .status-box {
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 2px;
+  }
+  .status-safe   { background: #eafaf3; color: #1a8a5a; border: 1px solid #a9dfbf; }
+  .status-risk   { background: #fef9e7; color: #b7770d; border: 1px solid #f9e4a0; }
+  .status-cavit  { background: #fdf2f8; color: #8e44ad; border: 1px solid #d7bde2; }
+  .status-flash  { background: #fdf0ef; color: #c0392b; border: 1px solid #f5b7b1; }
+  .readout-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 3px 0;
+    border-bottom: 1px solid #f0f4f8;
+  }
+  .readout-row:last-child { border-bottom: none; }
+  .readout-row .rlabel { color: #666; }
+  .readout-row .rval { font-weight: 700; font-variant-numeric: tabular-nums; color: #0a2342; }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: #444;
+    margin-bottom: 3px;
+  }
+  .legend-swatch {
+    width: 28px;
+    height: 3px;
+    flex-shrink: 0;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+<div id="top-bar">
+  Applied Control &mdash; <span>Cavitation Visualizer</span> &nbsp;·&nbsp; Pressure profile through a control valve
+</div>
+<div id="main">
+  <div id="canvas-area">
+    <canvas id="c"></canvas>
+  </div>
+  <div id="side-panel">
+    <!-- Pressures -->
+    <div class="ctrl-group">
+      <div class="ctrl-label">Process Conditions</div>
+      <div class="slider-row">
+        <label>P₁ Upstream (bar abs)</label>
+        <input type="range" id="p1" min="2" max="30" step="0.5" value="15">
+        <span class="val" id="p1-val">15.0</span>
+      </div>
+      <div class="slider-row">
+        <label>P₂ Downstream (bar abs)</label>
+        <input type="range" id="p2" min="1" max="25" step="0.5" value="8">
+        <span class="val" id="p2-val">8.0</span>
+      </div>
+      <div class="slider-row">
+        <label>Pᵥ Vapor Pressure (bar abs)</label>
+        <input type="range" id="pv" min="0.1" max="12" step="0.1" value="2.3">
+        <span class="val" id="pv-val">2.3</span>
+      </div>
+      <div class="slider-row">
+        <label>FL Pressure Recovery</label>
+        <input type="range" id="fl" min="0.5" max="1.0" step="0.01" value="0.9">
+        <span class="val" id="fl-val">0.90</span>
+      </div>
+    </div>
+
+    <!-- Calculated -->
+    <div class="ctrl-group">
+      <div class="ctrl-label">Calculated Values</div>
+      <div class="readout-row"><span class="rlabel">ΔP (bar)</span><span class="rval" id="r-dp">-</span></div>
+      <div class="readout-row"><span class="rlabel">Pvc vena contracta</span><span class="rval" id="r-pvc">-</span></div>
+      <div class="readout-row"><span class="rlabel">σ (cavit. index)</span><span class="rval" id="r-sigma">-</span></div>
+      <div class="readout-row"><span class="rlabel">FF factor</span><span class="rval" id="r-ff">-</span></div>
+      <div class="readout-row"><span class="rlabel">ΔP choked (bar)</span><span class="rval" id="r-dpchk">-</span></div>
+    </div>
+
+    <!-- Status -->
+    <div class="status-box status-safe" id="status-box">✓ No Cavitation</div>
+
+    <!-- Legend -->
+    <div class="ctrl-group">
+      <div class="ctrl-label">Legend</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#2471a3"></div>Pressure profile</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#c0392b;border-bottom:2px dashed #c0392b"></div>Vapor pressure Pᵥ</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#e67e22"></div>Upstream P₁</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#7fb3d3"></div>Downstream P₂</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#9b59b6"></div>Cavitation zone</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+let P1 = 15, P2 = 8, Pv = 2.3, FL = 0.9;
+
+function computeAll() {
+  const dP = Math.max(0, P1 - P2);
+  // Vena contracta pressure: Pvc = P1 - (dP / FL^2)
+  const Pvc = P1 - (dP / (FL * FL));
+  // Sigma: (P2 - Pv) / dP
+  const sigma = dP > 0.01 ? (P2 - Pv) / dP : 999;
+  // FF factor: Pc for water ~220.9 bar; approximate
+  const Pc = 220.9;
+  const FF = 0.96 - 0.28 * Math.sqrt(Math.max(0, Pv / Pc));
+  // Choked dP = FL^2 * (P1 - FF*Pv)
+  const dPchoked = FL * FL * (P1 - FF * Pv);
+
+  return { dP, Pvc, sigma, FF, dPchoked };
+}
+
+function getStatus(Pvc, sigma, P2, Pv) {
+  if (P2 < Pv) return { cls: 'status-flash', msg: '⚡ FLASHING — P₂ < Pᵥ: two-phase flow' };
+  if (Pvc < Pv && P2 > Pv) return { cls: 'status-cavit', msg: '💥 CAVITATION — Pvc < Pᵥ: bubble collapse' };
+  if (sigma < 3) return { cls: 'status-risk', msg: '⚠ Near cavitation — specify Cavitrol III' };
+  return { cls: 'status-safe', msg: '✓ Safe — no cavitation' };
+}
+
+function updateReadouts() {
+  const { dP, Pvc, sigma, FF, dPchoked } = computeAll();
+  document.getElementById('r-dp').textContent = dP.toFixed(2) + ' bar';
+  document.getElementById('r-pvc').textContent = Pvc.toFixed(2) + ' bar abs';
+  document.getElementById('r-sigma').textContent = sigma > 99 ? '—' : sigma.toFixed(2);
+  document.getElementById('r-ff').textContent = FF.toFixed(3);
+  document.getElementById('r-dpchk').textContent = dPchoked.toFixed(2);
+
+  const st = getStatus(Pvc, sigma, P2, Pv);
+  const el = document.getElementById('status-box');
+  el.className = 'status-box ' + st.cls;
+  el.textContent = st.msg;
+}
+
+function draw() {
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const PAD = { top: 40, bot: 60, left: 60, right: 30 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bot;
+
+  const { dP, Pvc } = computeAll();
+
+  // Pressure scale: 0 to P1 * 1.1
+  const Pmax = P1 * 1.12;
+  const Pmin = 0;
+
+  function yP(p) { return PAD.top + cH - ((p - Pmin) / (Pmax - Pmin)) * cH; }
+
+  // Background
+  ctx.fillStyle = '#fafcff';
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(PAD.left, PAD.top, cW, cH);
+  ctx.strokeStyle = '#cdd5de';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(PAD.left, PAD.top, cW, cH);
+
+  // Grid
+  ctx.setLineDash([2, 3]);
+  ctx.strokeStyle = '#e8edf3';
+  ctx.lineWidth = 0.8;
+  for (let p = 0; p <= Pmax; p += 2) {
+    if (p > Pmax) break;
+    const y = yP(p);
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(PAD.left + cW, y); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // X positions for key points
+  const xUp    = PAD.left + cW * 0.10;  // upstream
+  const xEntry = PAD.left + cW * 0.28;  // valve entry
+  const xVc    = PAD.left + cW * 0.50;  // vena contracta
+  const xExit  = PAD.left + cW * 0.72;  // valve exit
+  const xDown  = PAD.left + cW * 0.90;  // downstream
+
+  // Y positions for pressures
+  const yP1  = yP(P1);
+  const yP2  = yP(P2);
+  const yPvc = yP(Pvc);
+  const yPv  = yP(Pv);
+
+  // Cavitation zone shading (between vena contracta and recovery, if Pvc < Pv)
+  if (Pvc < Pv && P2 > Pv) {
+    // Find approximate x where pressure recovers to Pv
+    const xRecover = xVc + (xExit - xVc) * ((Pv - Pvc) / (P2 - Pvc));
+    ctx.fillStyle = 'rgba(155, 89, 182, 0.12)';
+    ctx.beginPath();
+    ctx.moveTo(xVc, yPvc);
+    ctx.lineTo(xRecover, yP(Pv));
+    ctx.lineTo(xRecover, PAD.top + cH);
+    ctx.lineTo(xVc, PAD.top + cH);
+    ctx.closePath();
+    ctx.fill();
+    ctx.font = '10px system-ui';
+    ctx.fillStyle = '#9b59b6';
+    ctx.textAlign = 'center';
+    ctx.fillText('Cavitation', (xVc + xRecover) / 2, yP(Pvc) - 6);
+    ctx.fillText('zone', (xVc + xRecover) / 2, yP(Pvc) + 7);
+  }
+
+  // Flashing zone — if P2 < Pv, shade entire downstream
+  if (P2 < Pv) {
+    ctx.fillStyle = 'rgba(192, 57, 43, 0.10)';
+    ctx.fillRect(xVc, PAD.top, xDown - xVc, cH);
+    ctx.font = '10px system-ui';
+    ctx.fillStyle = '#c0392b';
+    ctx.textAlign = 'center';
+    ctx.fillText('FLASHING ZONE', (xVc + xDown) / 2, PAD.top + 16);
+  }
+
+  // --- Valve body sketch ---
+  // Draw a simple globe valve body outline in the center
+  const vbX = xEntry, vbW = xExit - xEntry;
+  const vbMid = PAD.top + cH + 8;
+  const pipeY = PAD.top + cH + 20;
+
+  // Pipe lines (indicative)
+  ctx.strokeStyle = '#b0b8c4';
+  ctx.lineWidth = 1.5;
+  // inlet pipe
+  ctx.beginPath();
+  ctx.moveTo(PAD.left, pipeY - 8);
+  ctx.lineTo(xEntry, pipeY - 8);
+  ctx.moveTo(PAD.left, pipeY + 8);
+  ctx.lineTo(xEntry, pipeY + 8);
+  ctx.stroke();
+  // outlet pipe
+  ctx.beginPath();
+  ctx.moveTo(xExit, pipeY - 8);
+  ctx.lineTo(PAD.left + cW, pipeY - 8);
+  ctx.moveTo(xExit, pipeY + 8);
+  ctx.lineTo(PAD.left + cW, pipeY + 8);
+  ctx.stroke();
+
+  // Valve body box
+  ctx.fillStyle = '#eaf0f8';
+  ctx.strokeStyle = '#0a2342';
+  ctx.lineWidth = 1.2;
+  ctx.fillRect(vbX, pipeY - 18, vbW, 36);
+  ctx.strokeRect(vbX, pipeY - 18, vbW, 36);
+
+  // Vena contracta annotation
+  ctx.strokeStyle = '#0a2342';
+  ctx.lineWidth = 0.8;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(xVc, PAD.top);
+  ctx.lineTo(xVc, pipeY - 18);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font = '9px system-ui';
+  ctx.fillStyle = '#0a2342';
+  ctx.textAlign = 'center';
+  ctx.fillText('Vena', xVc, PAD.top + cH + 36);
+  ctx.fillText('Contracta', xVc, PAD.top + cH + 47);
+
+  // --- Pressure profile curve ---
+  // Sections: upstream flat → drop to vena contracta → recovery to P2 → downstream flat
+  ctx.beginPath();
+  ctx.strokeStyle = '#2471a3';
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([]);
+
+  // Upstream flat
+  ctx.moveTo(PAD.left, yP1);
+  ctx.lineTo(xEntry, yP1);
+  // Drop into valve (smooth curve to vena contracta)
+  ctx.bezierCurveTo(
+    xEntry + (xVc - xEntry) * 0.4, yP1,
+    xVc - (xVc - xEntry) * 0.2, yPvc,
+    xVc, yPvc
+  );
+  // Recovery curve from vena contracta to exit pressure P2
+  ctx.bezierCurveTo(
+    xVc + (xExit - xVc) * 0.4, yPvc,
+    xExit - (xExit - xVc) * 0.3, yP2,
+    xExit, yP2
+  );
+  // Downstream flat
+  ctx.lineTo(PAD.left + cW, yP2);
+  ctx.stroke();
+
+  // --- Reference lines ---
+  // Vapor pressure line
+  ctx.strokeStyle = '#c0392b';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(PAD.left, yPv);
+  ctx.lineTo(PAD.left + cW, yPv);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font = '10px IBM Plex Mono, monospace';
+  ctx.fillStyle = '#c0392b';
+  ctx.textAlign = 'left';
+  ctx.fillText('Pᵥ = ' + Pv.toFixed(1), PAD.left + 4, yPv - 4);
+
+  // P1 label
+  ctx.fillStyle = '#e67e22';
+  ctx.textAlign = 'left';
+  ctx.font = 'bold 10px IBM Plex Mono, monospace';
+  ctx.fillText('P₁ = ' + P1.toFixed(1) + ' bar', PAD.left + 6, yP1 - 5);
+
+  // P2 label
+  ctx.fillStyle = '#2471a3';
+  ctx.textAlign = 'right';
+  ctx.fillText('P₂ = ' + P2.toFixed(1) + ' bar', PAD.left + cW - 4, yP2 - 5);
+
+  // Pvc annotation
+  if (Pvc < P1 * 0.9) {
+    ctx.fillStyle = '#8e44ad';
+    ctx.textAlign = 'center';
+    ctx.font = '10px IBM Plex Mono, monospace';
+    ctx.fillText('Pvc=' + Pvc.toFixed(1), xVc, yPvc - 8);
+    // dot
+    ctx.beginPath();
+    ctx.arc(xVc, yPvc, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#8e44ad';
+    ctx.fill();
+  }
+
+  // --- Y axis labels ---
+  ctx.font = '10px IBM Plex Mono, monospace';
+  ctx.fillStyle = '#666';
+  ctx.textAlign = 'right';
+  for (let p = 0; p <= Pmax; p += 4) {
+    const y = yP(p);
+    if (y >= PAD.top && y <= PAD.top + cH) {
+      ctx.fillText(p.toFixed(0), PAD.left - 4, y + 4);
+    }
+  }
+
+  // Y axis title
+  ctx.save();
+  ctx.translate(14, PAD.top + cH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.font = '11px system-ui';
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'center';
+  ctx.fillText('Pressure (bar abs)', 0, 0);
+  ctx.restore();
+
+  // Chart title
+  ctx.font = 'bold 12px IBM Plex Sans, system-ui';
+  ctx.fillStyle = '#0a2342';
+  ctx.textAlign = 'left';
+  ctx.fillText('Pressure Profile Through Globe Valve', PAD.left + 4, PAD.top - 10);
+
+  // X axis label
+  ctx.font = '11px system-ui';
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'center';
+  ctx.fillText('← Flow direction through valve →', PAD.left + cW / 2, H - 8);
+}
+
+function resize() {
+  const el = document.getElementById('canvas-area');
+  canvas.width = el.clientWidth;
+  canvas.height = el.clientHeight;
+  updateReadouts();
+  draw();
+}
+
+['p1','p2','pv','fl'].forEach(id => {
+  const slider = document.getElementById(id);
+  const display = document.getElementById(id + '-val');
+  slider.addEventListener('input', () => {
+    const v = parseFloat(slider.value);
+    if (id === 'p1') { P1 = v; display.textContent = v.toFixed(1); }
+    if (id === 'p2') { P2 = v; display.textContent = v.toFixed(1); }
+    if (id === 'pv') { Pv = v; display.textContent = v.toFixed(1); }
+    if (id === 'fl') { FL = v; display.textContent = v.toFixed(2); }
+    updateReadouts();
+    draw();
+  });
+});
+
+window.addEventListener('resize', resize);
+resize();
+</script>
+</body>
+</html>

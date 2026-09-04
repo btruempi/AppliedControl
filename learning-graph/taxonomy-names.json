@@ -1,0 +1,14 @@
+{
+  "FUND": "Physics Fundamentals",
+  "VLVB": "Valve Bodies & Types",
+  "TRIM": "Valve Trim & Internals",
+  "ACT": "Actuators & Positioners",
+  "SIZE": "Valve Sizing & Selection",
+  "CTRL": "Control Systems (DCS/SIS)",
+  "SAFE": "Safety & Relief Systems",
+  "MEAS": "Measurement & Instrumentation",
+  "RELY": "Asset Reliability",
+  "APPL": "Industry Applications",
+  "STND": "Standards & Codes",
+  "SELL": "Sales Engineering"
+}
