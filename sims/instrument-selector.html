@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosemount & Micro Motion Instrument Selector — Applied Control</title>
+<style>
+  :root {
+    --ac-teal: #00796b; --ac-teal-light: #e0f2f1; --ac-orange: #f57c00;
+    --ac-navy: #0a1628; --ac-slate: #1e3a5f; --ac-text: #1a1a2e;
+    --ac-bg: #f8fafb; --ac-card: #ffffff; --ac-border: #e0e8ef;
+    --ac-muted: #546e7a; --ac-success: #2e7d32; --ac-warn: #e65100;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--ac-bg); color: var(--ac-text); font-family: 'IBM Plex Sans', system-ui, sans-serif; min-height: 100vh; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg, var(--ac-slate) 0%, var(--ac-navy) 100%); color: white; padding: 2rem; text-align: center; }
+  .header .eyebrow { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: #90caf9; margin-bottom: 0.5rem; }
+  .header h1 { font-size: 1.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .header p { font-size: 1rem; opacity: 0.85; max-width: 560px; margin: 0 auto; }
+
+  /* Progress bar */
+  .progress-wrap { background: var(--ac-navy); padding: 0.75rem 2rem; display: flex; align-items: center; gap: 1rem; }
+  .progress-label { color: #90caf9; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+  .progress-bar { flex: 1; background: rgba(255,255,255,0.15); border-radius: 4px; height: 6px; }
+  .progress-fill { background: var(--ac-orange); height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .progress-steps { display: flex; gap: 0.5rem; }
+  .progress-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); transition: background 0.3s; }
+  .progress-dot.active { background: var(--ac-orange); }
+  .progress-dot.done { background: var(--ac-teal); }
+
+  /* Question area */
+  .question-wrap { max-width: 860px; margin: 2rem auto; padding: 0 1.5rem; }
+  .question-card { background: var(--ac-card); border: 1px solid var(--ac-border); border-radius: 12px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .question-card h2 { font-size: 1.4rem; font-weight: 600; color: var(--ac-navy); margin-bottom: 0.4rem; }
+  .question-card .hint { font-size: 0.85rem; color: var(--ac-muted); margin-bottom: 1.5rem; }
+
+  /* Options grid */
+  .options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .opt { border: 2px solid var(--ac-border); border-radius: 10px; padding: 1.1rem 1.2rem; cursor: pointer; transition: all 0.2s; background: white; text-align: left; }
+  .opt:hover { border-color: var(--ac-teal); box-shadow: 0 4px 12px rgba(0,121,107,0.12); transform: translateY(-2px); }
+  .opt.selected { border-color: var(--ac-teal); background: var(--ac-teal-light); }
+  .opt .icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+  .opt .title { font-weight: 600; color: var(--ac-navy); font-size: 0.95rem; margin-bottom: 0.25rem; }
+  .opt .desc { font-size: 0.8rem; color: var(--ac-muted); line-height: 1.4; }
+
+  /* Navigation */
+  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+  .btn { padding: 0.65rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
+  .btn-back { background: white; border: 2px solid var(--ac-border); color: var(--ac-muted); }
+  .btn-back:hover { border-color: var(--ac-slate); color: var(--ac-slate); }
+  .btn-next { background: var(--ac-teal); color: white; }
+  .btn-next:hover { background: #00695c; box-shadow: 0 4px 12px rgba(0,121,107,0.3); }
+  .btn-next:disabled { background: #b0bec5; cursor: not-allowed; box-shadow: none; }
+  .btn-restart { background: var(--ac-orange); color: white; }
+  .btn-restart:hover { background: #e65100; }
+
+  /* Result */
+  .result-wrap { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; display: none; }
+  .result-header { background: linear-gradient(135deg, var(--ac-teal) 0%, #004d40 100%); color: white; border-radius: 12px 12px 0 0; padding: 1.5rem 2rem; }
+  .result-header .badge { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; display: inline-block; margin-bottom: 0.75rem; }
+  .result-header h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .result-header .model { font-size: 1rem; opacity: 0.9; font-family: 'IBM Plex Mono', monospace; }
+
+  .result-body { background: white; border: 1px solid var(--ac-border); border-top: none; border-radius: 0 0 12px 12px; padding: 2rem; }
+  .spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .spec-card { background: var(--ac-bg); border-radius: 8px; padding: 0.9rem 1rem; border: 1px solid var(--ac-border); }
+  .spec-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ac-muted); margin-bottom: 0.3rem; font-weight: 600; }
+  .spec-value { font-size: 0.9rem; font-weight: 600; color: var(--ac-navy); }
+
+  .why-box { background: #e8f5e9; border-left: 4px solid var(--ac-success); border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin-bottom: 1.5rem; }
+  .why-box h4 { font-size: 0.85rem; font-weight: 700; color: var(--ac-success); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  .why-box p { font-size: 0.9rem; color: #1b5e20; line-height: 1.6; }
+
+  .sales-box { background: #fff8e1; border-left: 4px solid var(--ac-orange); border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin-bottom: 1.5rem; }
+  .sales-box h4 { font-size: 0.85rem; font-weight: 700; color: var(--ac-warn); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  .sales-box p { font-size: 0.9rem; color: #e65100; line-height: 1.6; }
+
+  .integration-box { background: var(--ac-teal-light); border-left: 4px solid var(--ac-teal); border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin-bottom: 1.5rem; }
+  .integration-box h4 { font-size: 0.85rem; font-weight: 700; color: var(--ac-teal); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+  .integration-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag { background: var(--ac-teal); color: white; border-radius: 20px; padding: 0.25rem 0.75rem; font-size: 0.78rem; font-weight: 600; }
+  .tag.ams { background: var(--ac-slate); }
+  .tag.wireless { background: #7b1fa2; }
+  .tag.deltav { background: #1565c0; }
+
+  .also-consider { background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; }
+  .also-consider h4 { font-size: 0.85rem; font-weight: 700; color: #6a1b9a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+  .also-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .also-item { font-size: 0.88rem; color: #4a148c; }
+  .also-item strong { font-weight: 700; }
+
+  .restart-row { display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+
+  @media (max-width: 600px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .spec-grid { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Applied Control — Emerson Impact Partner</div>
+  <h1>🔬 Rosemount &amp; Micro Motion Instrument Selector</h1>
+  <p>Answer 5 questions — get the exact Rosemount or Micro Motion instrument, communication protocol, and integration path for your application.</p>
+</div>
+
+<div class="progress-wrap">
+  <span class="progress-label" id="progress-label">Step 1 of 5</span>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+  <div class="progress-steps">
+    <div class="progress-dot active" id="dot-0"></div>
+    <div class="progress-dot" id="dot-1"></div>
+    <div class="progress-dot" id="dot-2"></div>
+    <div class="progress-dot" id="dot-3"></div>
+    <div class="progress-dot" id="dot-4"></div>
+  </div>
+</div>
+
+<div class="question-wrap" id="question-wrap">
+  <div class="question-card" id="question-card">
+    <h2 id="q-title"></h2>
+    <div class="hint" id="q-hint"></div>
+    <div class="options-grid" id="q-options"></div>
+    <div class="nav-row">
+      <button class="btn btn-back" id="btn-back" onclick="goBack()" style="display:none">← Back</button>
+      <button class="btn btn-next" id="btn-next" onclick="goNext()" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="result-wrap" id="result-wrap">
+  <div class="result-header">
+    <div class="badge" id="r-badge"></div>
+    <h2 id="r-title"></h2>
+    <div class="model" id="r-model"></div>
+  </div>
+  <div class="result-body">
+    <div class="spec-grid" id="r-specs"></div>
+    <div class="why-box"><h4>Why This Instrument</h4><p id="r-why"></p></div>
+    <div class="sales-box"><h4>💬 Your Sales Script</h4><p id="r-sales"></p></div>
+    <div class="integration-box">
+      <h4>🔗 System Integration</h4>
+      <div class="integration-tags" id="r-tags"></div>
+    </div>
+    <div class="also-consider" id="also-wrap">
+      <h4>Also Consider</h4>
+      <div class="also-list" id="r-also"></div>
+    </div>
+    <div class="restart-row">
+      <button class="btn btn-restart" onclick="restart()">🔄 Start Over</button>
+      <a href="product-finder.html" class="btn" style="background:var(--ac-slate);color:white;text-decoration:none">🔍 Valve Selector →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    title: "What are you measuring?",
+    hint: "Select the process variable you need to monitor or control.",
+    key: "variable",
+    opts: [
+      { val: "pressure", icon: "📡", title: "Pressure / Differential Pressure", desc: "Static pressure, gauge pressure, differential pressure for flow or level" },
+      { val: "temperature", icon: "🌡️", title: "Temperature", desc: "Process temperature in pipes, vessels, heat exchangers" },
+      { val: "level", icon: "📊", title: "Level", desc: "Tank level, interface level, density — liquid, slurry, or bulk solid" },
+      { val: "flow", icon: "🌊", title: "Flow", desc: "Volumetric or mass flow rate in a pipe or channel" },
+      { val: "analysis", icon: "🧪", title: "Process Analysis", desc: "pH, conductivity, dissolved oxygen, turbidity, gas analysis" },
+    ]
+  },
+  {
+    title: "What is your process fluid?",
+    hint: "Fluid characteristics drive material selection and technology choice.",
+    key: "fluid",
+    opts: [
+      { val: "clean-liquid", icon: "💧", title: "Clean Liquid", desc: "Water, clean process fluids, no solids or coating" },
+      { val: "corrosive", icon: "⚗️", title: "Corrosive / Aggressive", desc: "Acids, caustics, chlorinated compounds, HF — require exotic alloys" },
+      { val: "gas-steam", icon: "💨", title: "Gas / Steam / Vapor", desc: "Air, natural gas, steam, compressed gases, volatile vapors" },
+      { val: "slurry-dirty", icon: "🟫", title: "Slurry / Dirty / Viscous", desc: "Pulp, slurries, viscous fluids, plugging or coating service" },
+      { val: "cryogenic", icon: "🧊", title: "Cryogenic / LNG", desc: "Below -150°F service — LNG, liquid nitrogen, liquid oxygen" },
+    ]
+  },
+  {
+    title: "What communication protocol does your system use?",
+    hint: "Match to your existing DCS, PLC, or wireless infrastructure.",
+    key: "protocol",
+    opts: [
+      { val: "hart", icon: "📶", title: "4–20 mA + HART", desc: "Classic analog with digital overlay — compatible with any DCS, easy retrofit" },
+      { val: "wireless", icon: "📡", title: "WirelessHART / IEC 62591", desc: "No wiring cost, self-healing mesh network — Rosemount 702/703/704 adapters" },
+      { val: "ff-pa", icon: "🔌", title: "FOUNDATION Fieldbus / PROFIBUS PA", desc: "Fully digital bus — fewer wires, device diagnostics in the DCS" },
+      { val: "iolink", icon: "🔗", title: "IO-Link / Modbus / EtherNet/IP", desc: "Industrial Ethernet or serial bus — manufacturing and discrete applications" },
+    ]
+  },
+  {
+    title: "What is the accuracy or safety priority?",
+    hint: "This drives whether you need the standard or premium model tier.",
+    key: "priority",
+    opts: [
+      { val: "standard", icon: "✅", title: "Standard Accuracy", desc: "0.1–0.5% typical — process monitoring, general control applications" },
+      { val: "high-acc", icon: "🎯", title: "High Accuracy / Custody Transfer", desc: "±0.05% or better — fiscal metering, custody transfer, billing-quality measurement" },
+      { val: "safety", icon: "🛡️", title: "Functional Safety (SIL)", desc: "SIL 1/2/3 rated — safety instrumented systems, IEC 61511 proof test records" },
+      { val: "pharma", icon: "💊", title: "Pharma / Sanitary / FDA", desc: "21 CFR Part 11, EHEDG, 3-A certified, WFI/CIP/SIP processes" },
+    ]
+  },
+  {
+    title: "What is your installation challenge?",
+    hint: "The final filter for wiring budget, space constraints, and access.",
+    key: "install",
+    opts: [
+      { val: "standard-install", icon: "🔧", title: "Flanged / Threaded Process Connection", desc: "Standard pipe tap, flanged nozzle — normal installation" },
+      { val: "remote-seal", icon: "🔁", title: "Remote Seal / Capillary Required", desc: "Viscous, corrosive, or high-temp — seal isolates transmitter from process" },
+      { val: "clamp-on", icon: "🗜️", title: "Clamp-on / Non-invasive", desc: "Ultrasonic flow or radar level — no process penetration needed" },
+      { val: "retrofit", icon: "♻️", title: "Retrofit — Existing Tap or Nozzle", desc: "Replace existing instrument with minimal piping change" },
+    ]
+  }
+];
+
+// Recommendation database
+const R = {
+  // PRESSURE
+  "pressure-clean-liquid-hart-standard-standard-install": {
+    badge: "Pressure Measurement", title: "Rosemount 3051C Coplanar Pressure Transmitter",
+    model: "Rosemount 3051CD / 3051CG — 4-20 mA + HART 7", category: "Pressure / DP",
+    specs: [
+      {l:"Accuracy",v:"±0.065% of span"},{l:"Stability",v:"±0.1% / 10 years"},
+      {l:"Rangeability",v:"100:1"},{l:"Protocol",v:"HART 7 / 4-20 mA"},
+      {l:"Housing",v:"Coplanar — NEMA 4X"},{l:"Approvals",v:"SIL 2, ATEX, FM"}
+    ],
+    why: "The Rosemount 3051C is the industry standard coplanar transmitter — over 10 million installed worldwide. The coplanar design puts DP, gauge, and absolute pressure on the same flange, so one SKU handles your plant standard. HART 7 gives full AMS Device Manager integration: device health, process alerts, and calibration records all in the DCS.",
+    sales: "Ask your customer: 'Are you still doing manual calibration rounds every 6 months?' The 3051's ±0.1%/10-year stability means many plants extend calibration intervals from 6 months to 5 years — that's 8 fewer calibration visits per transmitter over the device life. On a 500-transmitter plant, that's easily $200K in avoided maintenance labor.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","PlantWeb"],
+    also: [
+      {model:"Rosemount 3051S Scalable (SuperModule)", use:"When ±0.025% accuracy needed — critical flow or level calculations"},
+      {model:"Rosemount 3051T In-Line", use:"When a compact, direct-mount pressure transmitter is needed"},
+      {model:"Rosemount 2051 Budget Transmitter", use:"Non-critical monitoring where cost is the primary driver"}
+    ]
+  },
+  "pressure-gas-steam-hart-standard-standard-install": {
+    badge: "Differential Pressure Flow", title: "Rosemount 3051S DP Flow Transmitter with Integral Orifice",
+    model: "Rosemount 3051SFC Integral Orifice Flowmeter — HART 7",
+    category: "DP Flow Measurement",
+    specs: [
+      {l:"Accuracy",v:"±0.65% of flow (typical)"},{l:"Range",v:"10:1 turndown"},
+      {l:"Temperature",v:"-40°F to 250°F process"},{l:"Connections",v:"Integral or remote mount"},
+      {l:"Primary Element",v:"Integral orifice, all sizes"},{l:"Approvals",v:"SIL 2, FM, ATEX"}
+    ],
+    why: "When you already have orifice plates, the Rosemount 3051S DP transmitter is the engineered match — factory-characterized primary element, single installation with no interconnecting impulse lines. For steam and gas flow measurement where accuracy matters, the integral design eliminates the most common sources of DP flow error.",
+    sales: "Compare to a separate transmitter + orifice plate assembly: the 3051SFC installs in 40% less time, eliminates 4 flange connections (4 potential leak points), and the factory calibration certificate goes right into your IQ/OQ package. For pharmaceutical customers, that alone saves 4–8 hours of documentation per loop.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","IQ/OQ Support"],
+    also: [
+      {model:"Rosemount 3051S SuperModule", use:"When ±0.04% DP accuracy needed for high-value flow measurement"},
+      {model:"Rosemount 8800D Vortex", use:"When you want to eliminate DP taps entirely — vortex is more robust for steam"},
+      {model:"Micro Motion ELITE Coriolis", use:"When mass flow ± 0.1% accuracy or custody transfer is required"}
+    ]
+  },
+  "pressure-clean-liquid-wireless-standard-standard-install": {
+    badge: "Wireless Pressure", title: "Rosemount 3051S Wireless Pressure Transmitter",
+    model: "Rosemount 3051S with Rosemount 702 WirelessHART Adapter",
+    category: "Pressure / WirelessHART",
+    specs: [
+      {l:"Accuracy",v:"±0.065% of span"},{l:"Protocol",v:"WirelessHART IEC 62591"},
+      {l:"Update Rate",v:"1 sec to 60 min configurable"},{l:"Power",v:"10-year battery life"},
+      {l:"Mesh Network",v:"Self-healing, 250m range"},{l:"Security",v:"128-bit AES encryption"}
+    ],
+    why: "WirelessHART eliminates wiring cost entirely — on remote tanks, pipeline segments, or areas where running conduit is expensive, wireless pays for itself in the first installation. The 3051S maintains the same measurement performance as the wired version; the 702 adapter adds WirelessHART communication without changing the proven sensor.",
+    sales: "Ask: 'What does it cost you to run a new 4-wire cable to a remote tank?' If the answer is over $2,000 (typical for a 500-foot run with conduit), a $1,500 WirelessHART transmitter pays back in the first installation. The 128-bit AES security meets most facility cybersecurity requirements, and the self-healing mesh means one failed node doesn't take down the network.",
+    tags: ["WirelessHART","AMS Device Manager","DeltaV Ready","10-Year Battery","Self-Healing Mesh"],
+    also: [
+      {model:"Rosemount 3051 Wired (HART 7)", use:"When update rate faster than 4 seconds required, or wiring already exists"},
+      {model:"Rosemount 648 Wireless Temperature", use:"Pair with wireless pressure for complete remote monitoring"},
+      {model:"Emerson Smart Wireless Gateway 1420", use:"Required to connect WirelessHART devices to DCS — one gateway per network"}
+    ]
+  },
+  "pressure-corrosive-hart-safety-remote-seal": {
+    badge: "SIL / Safety Rated", title: "Rosemount 3051S with Remote Seal — SIL 2 Certified",
+    model: "Rosemount 3051S + 1199 Seal System — SIL 2 / TÜV Certified",
+    category: "Safety / Corrosive Service",
+    specs: [
+      {l:"Accuracy",v:"±0.04% of span (SuperModule)"},{l:"SIL Rating",v:"SIL 2 (single), SIL 3 (redundant)"},
+      {l:"Seal Material",v:"Hastelloy C, 316L SS, Monel, PTFE"},{l:"Capillary Fill",v:"Silicone, food-grade, high-temp"},
+      {l:"Proof Test",v:"Automated via AMS SIS"},{l:"Temp Range",v:"-75°F to 250°F (seal dependent)"}
+    ],
+    why: "For aggressive process fluids — acids, caustics, chlorine, HF — a remote seal completely isolates the transmitter from the process. The 1199 seal system is factory-engineered and calibrated with the 3051S as a unit, eliminating field calibration errors. SIL 2 certification with TÜV documentation means this instrument satisfies IEC 61511 requirements without additional validation testing.",
+    sales: "Pharma and chemical customers are often surprised to learn that the 3051S+1199 system comes with a SIL 2 certificate from TÜV — the same certification body they're already using for their safety systems. That eliminates the need for a separate third-party safety review, which at $5,000–$15,000 per SIS loop, is real money.",
+    tags: ["SIL 2 Certified","TÜV","Remote Seal","IEC 61511","AMS SIS","HART 7"],
+    also: [
+      {model:"Rosemount 3051C Standard (no seal)", use:"When fluid is compatible with stainless steel and no isolation is needed"},
+      {model:"Rosemount 644 Thermowell + RTD", use:"Pair for combined pressure/temperature safety loop"},
+      {model:"ASCO Solenoid Valve", use:"For SIS shutdown valve — Applied Control stocks ASCO 8300 Series"}
+    ]
+  },
+
+  // TEMPERATURE
+  "temperature-clean-liquid-hart-standard-standard-install": {
+    badge: "Temperature Measurement", title: "Rosemount 644 HART Temperature Transmitter",
+    model: "Rosemount 644H with 0065 RTD Sensor — 4-20 mA + HART 7",
+    category: "Temperature / RTD",
+    specs: [
+      {l:"Sensor Type",v:"Pt100 RTD or Thermocouple"},{l:"Accuracy",v:"±0.1°C (RTD)"},
+      {l:"Range",v:"-200°C to 850°C"},{l:"Protocol",v:"HART 7 / 4-20 mA"},
+      {l:"Housing",v:"DIN rail or head-mount"},{l:"Approvals",v:"SIL 2, ATEX, FM, IEC"}
+    ],
+    why: "The Rosemount 644 is the transmitter-of-record for process temperature in Emerson plants worldwide. Head-mount or DIN rail — same electronics, same HART communication. Dual-input accepts RTD or thermocouple, and the sensor backup feature continues transmitting on a secondary sensor if the primary fails — critical for heat exchanger and reactor applications.",
+    sales: "RTDs are 10× more accurate than thermocouples and don't drift. A 1°C temperature measurement error in a heat exchanger or distillation column typically wastes 1–3% of energy. On a column processing 10,000 bbl/day, that's $150K–$450K annually in energy waste. The 644's ±0.1°C accuracy directly addresses that cost.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","Sensor Backup"],
+    also: [
+      {model:"Rosemount 248 Programmable Temperature Transmitter", use:"When a lower-cost head-mount option is needed for non-critical monitoring"},
+      {model:"Rosemount 648 WirelessHART Temperature", use:"When running wiring to a new point is cost-prohibitive"},
+      {model:"Rosemount 3144P Dual-Input", use:"When two temperature points need to transmit on a single 4-wire loop"}
+    ]
+  },
+  "temperature-gas-steam-hart-standard-standard-install": {
+    badge: "Temperature — Gas/Steam", title: "Rosemount 3144P Dual-Input Temperature Transmitter",
+    model: "Rosemount 3144P with Thermowell — HART 7",
+    category: "Temperature / Thermocouple",
+    specs: [
+      {l:"Inputs",v:"Dual RTD or TC, independent"},{l:"Accuracy",v:"±0.25°C thermocouple"},
+      {l:"Range",v:"-200°C to 1600°C (TC)"},{l:"Failover",v:"Auto-switch to backup sensor"},
+      {l:"Thermowell",v:"Weld-in, flanged, NPT options"},{l:"Approvals",v:"SIL 2, ATEX, FM"}
+    ],
+    why: "Steam and high-temperature gas service requires a thermocouple (RTDs don't survive above 600°C). The 3144P's dual-input with automatic sensor backup means a single burned-out thermocouple no longer means an unplanned shutdown — the transmitter automatically switches to the backup and alerts operations via HART.",
+    sales: "In steam systems, thermocouple drift is the silent process killer. A 5°C drift in a steam header measurement can throw off enthalpy calculations, over-fire a boiler, or cause product quality issues. The 3144P's Callendar-Van Dusen linearization and auto-sensor-backup keep you on spec without manual calibration checks.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","Dual Sensor"],
+    also: [
+      {model:"Rosemount 644 RTD Transmitter", use:"For lower temperatures where RTD accuracy is achievable (up to 600°C)"},
+      {model:"Wika or Ashcroft Bimetallic Gauge", use:"Local indication backup where digital readout is preferred"},
+      {model:"Rosemount 8800D Vortex Flowmeter", use:"Vortex measures temperature alongside flow — two transmitters in one"}
+    ]
+  },
+  "temperature-clean-liquid-wireless-standard-standard-install": {
+    badge: "Wireless Temperature", title: "Rosemount 648 WirelessHART Temperature Transmitter",
+    model: "Rosemount 648 — WirelessHART IEC 62591",
+    category: "Temperature / WirelessHART",
+    specs: [
+      {l:"Sensor",v:"RTD or TC, any type"},{l:"Battery Life",v:"Up to 7 years (15-min update)"},
+      {l:"Update Rate",v:"30 sec to 60 min"},{l:"Protocol",v:"WirelessHART IEC 62591"},
+      {l:"Operating Temp",v:"-40°C to 85°C ambient"},{l:"Approvals",v:"ATEX, FM, IECEx"}
+    ],
+    why: "The 648 is the most widely installed wireless temperature transmitter in process industries. Self-powered from a lithium battery pack, it mounts on any existing thermowell. Plants use it for non-critical monitoring points — rotating equipment bearings, steam trap outlet temperatures, heat exchanger shell temperatures — where wiring a new instrument is not justified.",
+    sales: "Steam trap monitoring is the killer app for the 648. A failed-open steam trap wastes $10,000–$30,000/year in steam. A plant with 500 traps might have 50 failed at any time. Wireless temperature monitoring at each trap outlet pays back in 3–6 months on steam savings alone — and eliminates dangerous manual walking of hot steam trap areas.",
+    tags: ["WirelessHART","AMS Device Manager","Steam Trap Monitoring","No Wiring","IECEx"],
+    also: [
+      {model:"Rosemount 3051 Wireless Pressure", use:"For a complete wireless monitoring solution — pressure + temperature"},
+      {model:"Emerson Smart Wireless Gateway 1420", use:"Required to bring WirelessHART data into DCS — one per network"},
+      {model:"Rosemount 644 Wired", use:"When update rate < 30 seconds needed, or wiring already exists"}
+    ]
+  },
+  "temperature-pharma-hart-pharma-standard-install": {
+    badge: "Pharma / FDA", title: "Rosemount 644S Sanitary Temperature Transmitter",
+    model: "Rosemount 644S with Tri-Clamp Thermowell — HART 7",
+    category: "Temperature / Sanitary",
+    specs: [
+      {l:"Connection",v:"Tri-Clamp 1.5\" to 4\""},{l:"Surface Finish",v:"Ra ≤ 0.4 µm (15 µin)"},
+      {l:"Material",v:"316L SS, Hastelloy option"},{l:"CIP/SIP Rating",v:"Yes — 135°C CIP"},
+      {l:"FDA CFR",v:"21 CFR Part 11 audit trail"},{l:"IQ/OQ",v:"Factory IQ/OQ documentation"}
+    ],
+    why: "The 644S is purpose-built for pharmaceutical WFI loops, biofermenters, and CIP/SIP circuits. The crevice-free Tri-Clamp connection and electropolished 316L finish meet 3-A and EHEDG requirements. The HART 7 audit trail satisfies FDA 21 CFR Part 11 electronic records requirements without additional software.",
+    sales: "Pharma quality teams often spend 15–25 hours per sensor on IQ/OQ documentation. Rosemount's factory IQ/OQ package — traceable calibration to NIST standards, material certificates, drawings — cuts that to 3–5 hours. For a 50-sensor WFI loop project, that's 500–1,000 hours of saved QA/validation labor.",
+    tags: ["FDA 21 CFR","3-A Certified","EHEDG","IQ/OQ Support","CIP/SIP","HART 7"],
+    also: [
+      {model:"Rosemount 3051 Sanitary Pressure", use:"For fermentation headspace pressure and WFI system pressure monitoring"},
+      {model:"Endress+Hauser Promag Sanitary Mag Flow", use:"For WFI volumetric flow — if mag flow is preferred over Coriolis"},
+      {model:"Micro Motion F-Series Coriolis", use:"For WFI mass flow and density measurement — highest accuracy available"}
+    ]
+  },
+
+  // LEVEL
+  "level-clean-liquid-hart-standard-standard-install": {
+    badge: "Level Measurement", title: "Rosemount 5408 Non-Contact Radar Level Transmitter",
+    model: "Rosemount 5408 80 GHz FMCW Radar — HART 7",
+    category: "Level / Non-Contact Radar",
+    specs: [
+      {l:"Technology",v:"80 GHz FMCW Radar"},{l:"Range",v:"Up to 30m (98 ft)"},
+      {l:"Accuracy",v:"±2mm"},{l:"Beam Angle",v:"3° — narrow, no interference"},
+      {l:"Mounting",v:"4\" nozzle, any angle"},{l:"Approvals",v:"SIL 2, ATEX, FM"}
+    ],
+    why: "The 5408 80 GHz radar is the most precise non-contact level instrument on the market. The 3° beam angle means it fits into tanks with internal obstructions — agitators, heating coils, ladders — without false echoes. No moving parts, no process contact, and no maintenance. The narrow beam also allows installation on small nozzles where older 6 GHz radars required 18\" flanges.",
+    sales: "Ask: 'How often does your level gauge stick, fog up, or fail in dirty service?' Non-contact radar has no wetted parts — nothing to corrode, foul, or freeze. For customers losing production because of failed float gauges or caged glass gauges, the payback on a $3,500 radar transmitter is often measured in weeks, not years.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","Non-Contact","80 GHz"],
+    also: [
+      {model:"Rosemount 5303 Guided Wave Radar (GWR)", use:"When vapor above liquid is turbulent or heavy — GWR is immune to vapor interference"},
+      {model:"Rosemount 5302 Single-Lead GWR", use:"For interface level measurement (oil-water separation)"},
+      {model:"Rosemount 3051L Differential Pressure Level", use:"For tanks with known specific gravity — lowest cost option"}
+    ]
+  },
+  "level-slurry-dirty-hart-standard-standard-install": {
+    badge: "Level — Challenging Service", title: "Rosemount 5302 Guided Wave Radar — Slurry/Foam Service",
+    model: "Rosemount 5302 GWR with Flexible Probe — HART 7",
+    category: "Level / Guided Wave Radar",
+    specs: [
+      {l:"Technology",v:"TDR Guided Wave Radar"},{l:"Probe Type",v:"Flexible rope — slurry immune"},
+      {l:"Range",v:"Up to 45m (148 ft)"},{l:"Accuracy",v:"±3mm"},
+      {l:"Process Temp",v:"-40°C to 200°C"},{l:"Foam/Coating",v:"Immune — signal propagates the probe"}
+    ],
+    why: "In slurry, foam, and sticky media where non-contact radar struggles to get a return signal, guided wave radar wins — the probe carries the microwave signal directly through the medium. The flexible rope probe won't break in agitated tanks and the self-calibrating algorithm rejects foam and froth layers automatically.",
+    sales: "Pulp and paper, mining, and wastewater customers lose level control when foaming causes false readings. GWR sees through foam. Compare to ultrasonic: ultrasonic is confused by vapor, foam, and anything above 60°C. GWR works reliably from -40°C to 200°C, in foam, steam, and vapor — one technology for all their difficult level applications.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","GWR","Foam Immune"],
+    also: [
+      {model:"Rosemount 5408 80 GHz Non-Contact Radar", use:"When process is clean and no nozzle obstructions — simpler installation"},
+      {model:"Rosemount 2120 Vibrating Fork", use:"Point level switch for high/low alarm — simple, no moving parts"},
+      {model:"Rosemount 3051 DP with Wet Legs", use:"Traditional DP level for pressurized vessels with known SG"}
+    ]
+  },
+
+  // FLOW
+  "flow-clean-liquid-hart-standard-standard-install": {
+    badge: "Flow Measurement", title: "Rosemount 8800D Vortex Flowmeter",
+    model: "Rosemount 8800D Vortex Multivariable — HART 7",
+    category: "Flow / Vortex",
+    specs: [
+      {l:"Technology",v:"Vortex shedding"},{l:"Measurement",v:"Flow + Temperature + Pressure"},
+      {l:"Accuracy",v:"±0.65% liquid / ±1% gas"},{l:"Range",v:"20:1 turndown"},
+      {l:"Line Size",v:"½\" to 24\""},{l:"Approvals",v:"SIL 2, ATEX, FM, PED"}
+    ],
+    why: "The 8800D measures volumetric flow with no moving parts — nothing to foul, stick, or wear. The multivariable version adds integrated temperature and pressure sensors, computing mass flow or steam flow in a single device. For steam applications, it replaces three separate instruments: flow, temperature, and pressure transmitters with one flanged installation.",
+    sales: "Steam metering is the 8800D's showcase application. One device measures steam flow, temperature, and pressure and transmits compensated mass flow directly to the DCS. Compare to three separate transmitters + external flow computer — the 8800D cuts installation cost by 60%, eliminates three maintenance points, and the SIL 2 rating allows use in steam safety interlock systems.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","Multivariable","Steam Flow"],
+    also: [
+      {model:"Micro Motion ELITE Coriolis", use:"When mass flow accuracy ±0.1% or better required — custody transfer, chemical dosing"},
+      {model:"Rosemount 3051 DP with Integral Orifice", use:"When vortex minimum flow rate can't be met — DP works at very low flows"},
+      {model:"Rosemount 3051S Annubar Averaging Pitot", use:"For large-pipe (12\"+) gas or steam flow — lower pressure drop than orifice"}
+    ]
+  },
+  "flow-clean-liquid-hart-high-acc-standard-install": {
+    badge: "Custody Transfer / Mass Flow", title: "Micro Motion ELITE Coriolis Flowmeter",
+    model: "Micro Motion ELITE CMF Series with 5700 Transmitter — HART 7",
+    category: "Flow / Coriolis — Mass Flow",
+    specs: [
+      {l:"Accuracy",v:"±0.05% liquid mass / ±0.35% gas"},{l:"Repeatability",v:"±0.025%"},
+      {l:"Measures",v:"Mass flow + Density + Temperature"},{l:"Line Size",v:"1/10\" to 12\""},
+      {l:"Fluid",v:"Any liquid, gas, or slurry"},{l:"Approvals",v:"SIL 1/2, ATEX, FM, Weights & Measures"}
+    ],
+    why: "Coriolis is the only flow technology that directly measures mass flow — no compensation needed for pressure, temperature, or fluid property changes. The Micro Motion ELITE is Weights & Measures certified (NTEP, OIML), making it legal for custody transfer and billing. The 5700 transmitter adds HART 7 communication and AMS Device Manager integration for continuous health monitoring.",
+    sales: "Here's the ROI conversation: A customer measuring 10 million gallons/year at $5/gallon with a ±0.5% DP meter is accepting $250,000/year in billing uncertainty. Switch to ELITE Coriolis at ±0.05% and that uncertainty drops to $25,000 — $225,000/year directly recovered. The meter pays for itself in weeks. That's not a product pitch — that's math.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","Custody Transfer","NTEP","Mass Flow"],
+    also: [
+      {model:"Micro Motion F-Series Coriolis", use:"Smaller line sizes (1/10\" to 2\") — high-accuracy chemical dosing"},
+      {model:"Micro Motion R-Series Coriolis", use:"Highest-accuracy option — ±0.02% for ultra-precision applications"},
+      {model:"Rosemount 8800D Vortex", use:"When cost is primary driver and ±0.65% accuracy is acceptable"}
+    ]
+  },
+  "flow-gas-steam-hart-standard-standard-install": {
+    badge: "Gas / Steam Flow", title: "Rosemount 3051SFP Annubar Averaging Pitot",
+    model: "Rosemount 3051SFP Annubar — HART 7",
+    category: "Flow / Averaging Pitot",
+    specs: [
+      {l:"Technology",v:"4-port averaging pitot tube"},{l:"Line Size",v:"2\" to 96\" pipes"},
+      {l:"Accuracy",v:"±0.75% of rate"},{l:"Pressure Drop",v:"70% lower than orifice plate"},
+      {l:"Insertion",v:"Hot-tap capable — no shutdown"},{l:"Rangeability",v:"10:1 standard, 16:1 extended"}
+    ],
+    why: "The Annubar is the right choice for large-pipe gas and steam flow measurement where an orifice plate would create excessive pressure drop and require a 6\" flanged spool piece. Hot-tap insertion means installation without process shutdown — huge for existing natural gas lines, compressed air mains, or steam headers where a shutdown costs hundreds of thousands.",
+    sales: "For customers running large gas transmission pipelines or steam distribution headers, ask: 'How much does it cost you to shut down for an orifice plate inspection?' Hot-tap Annubar installation and removal is done under pressure — no shutdown, no flaring, no lost production. For a single hot-tap job on a gas line, that avoids $50K–$500K in shutdown cost.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","Hot-Tap","Large Pipe"],
+    also: [
+      {model:"Rosemount 8800D Vortex", use:"For smaller pipes (1/2\" to 24\") where no moving parts preferred over orifice"},
+      {model:"Micro Motion ELITE Coriolis", use:"When mass flow accuracy > 0.75% required, and pipe size ≤ 12\""},
+      {model:"Rosemount 3051 with Conditioning Orifice Plate", use:"When ±0.5% needed in short pipe runs — no upstream/downstream straight run"}
+    ]
+  },
+  "flow-slurry-dirty-hart-standard-standard-install": {
+    badge: "Slurry / Dirty Liquid Flow", title: "Rosemount 8750W Magnetic Flowmeter",
+    model: "Rosemount 8750W Wafer Mag Flowmeter — HART 7",
+    category: "Flow / Magnetic",
+    specs: [
+      {l:"Technology",v:"Electromagnetic (Faraday's law)"},{l:"Liner",v:"PTFE, polyurethane, neoprene"},
+      {l:"Electrodes",v:"316L, Hastelloy C, platinum"},{l:"Accuracy",v:"±0.5% of rate"},
+      {l:"Range",v:"Bidirectional, 1:30 turndown"},{l:"Min Conductivity",v:"5 µS/cm"}
+    ],
+    why: "Magnetic flowmeters have no moving parts and no flow obstruction — the bore is completely open. For slurries, pulp stock, wastewater, and abrasive fluids that destroy orifice plates and clog DP taps, mag flow is the only practical choice. The PTFE or polyurethane liner resists abrasion and chemical attack.",
+    sales: "Pulp and paper, mining, and municipal water customers frequently deal with plugged orifice taps and worn meter inserts. A mag meter has no taps to plug, no insert to wear, and no zero-drift from erosion. Compare lifecycle cost: an orifice system might be cleaned or replaced 2–3 times per year at $2,000–$5,000 each; a mag meter runs 10+ years without maintenance.",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","No Moving Parts","Slurry Rated"],
+    also: [
+      {model:"Micro Motion ELITE Coriolis", use:"When mass flow (not volumetric) is required, and pipe size ≤ 12\""},
+      {model:"Rosemount 8800D Vortex", use:"When fluid is clean and low pressure drop needed"},
+      {model:"Rosemount 3051 DP", use:"Lowest cost option when slurry doesn't plug taps"}
+    ]
+  },
+
+  // ANALYSIS
+  "analysis-clean-liquid-hart-standard-standard-install": {
+    badge: "pH & Conductivity", title: "Rosemount Analytical pH/ORP System",
+    model: "Rosemount 56 Transmitter with 3900 pH Electrode — HART 7",
+    category: "Process Analysis / pH",
+    specs: [
+      {l:"pH Range",v:"0–14 pH"},{l:"Accuracy",v:"±0.01 pH units"},
+      {l:"Transmitter",v:"Rosemount 56 — 2-wire HART"},{l:"Electrode",v:"3900 glass, 3400 differential"},
+      {l:"CIP Rating",v:"Yes — steam-in-place to 135°C"},{l:"Approvals",v:"FM, ATEX, CSA"}
+    ],
+    why: "The Rosemount 56 transmitter with 3900 series electrodes covers pH, ORP, and dissolved oxygen in a single platform. The 3900 differential pH electrode is the industry reference for difficult process streams — it's self-cleaning and handles coating, high-temperature, and high-pressure service that kills glass electrodes in weeks.",
+    sales: "pH control is critical in wastewater treatment — regulatory compliance, chemical dosing cost, and product quality all depend on it. Ask: 'What does it cost you when your pH electrode drifts 0.5 pH units before you catch it?' That's typically a compliance exceedance event, $10,000–$50,000 in fines, and a permit review. The 3900's diagnostic HART data catches drift before it's a problem.",
+    tags: ["AMS Device Manager","HART 7","pH","ORP","Dissolved Oxygen","CIP Rated"],
+    also: [
+      {model:"Rosemount Analytical Conductivity System", use:"For water quality monitoring, RO/DI system quality, boiler blowdown control"},
+      {model:"Rosemount Analytical Turbidity Sensor", use:"For drinking water compliance, filter breakthrough detection"},
+      {model:"Emerson Sensirion Gas Analyzer", use:"For combustion optimization, flue gas, or process gas analysis"}
+    ]
+  },
+  "analysis-gas-steam-hart-standard-standard-install": {
+    badge: "Gas Analysis", title: "Emerson Rosemount CT4215 Gas Analyzer",
+    model: "Rosemount CT4215 Combustion Analyzer — HART 7",
+    category: "Process Analysis / Gas",
+    specs: [
+      {l:"Measurement",v:"O₂, CO, CO₂, combustibles"},{l:"Technology",v:"Extractive / In-situ zirconia"},
+      {l:"Response Time",v:"< 3 seconds (in-situ)"},{l:"Range",v:"0–25% O₂ (zirconia)"},
+      {l:"Output",v:"4-20 mA + HART 7"},{l:"Approvals",v:"FM, ATEX, SIL 1"}
+    ],
+    why: "Combustion O₂ analysis is the single highest-ROI measurement in a plant boiler or fired heater. A 1% excess air optimization on a large boiler saves 0.5% fuel — on a 100 MMBtu/hr boiler, that's $150,000–$300,000/year in natural gas savings. The CT4215's in-situ zirconia cell responds in under 3 seconds — fast enough for closed-loop combustion control.",
+    sales: "Energy managers love this conversation: 'What is your boiler running at for excess air right now?' Most answer '15–20%' (typical without O₂ trim). Optimal is 2–5%. Closing that gap saves 1–3% of fuel cost. For a refinery with 20 fired heaters at 50 MMBtu/hr each, that's $500K–$1.5M/year in fuel. The analyzer pays for itself in one quarter.",
+    tags: ["AMS Device Manager","HART 7","Combustion Optimization","Energy Savings","SIL 1"],
+    also: [
+      {model:"Rosemount Analytical 4 Component Gas Analyzer", use:"When CO, CO₂, and combustibles monitoring needed alongside O₂"},
+      {model:"Emerson Gas Chromatograph (Daniel/GC3000)", use:"For natural gas composition, BTU value, and custody transfer"},
+      {model:"Emerson Quantum Cascade Laser (QCL) Analyzer", use:"Trace gas detection — ppm-level CO, NH₃, HF in safety monitoring"}
+    ]
+  },
+  // Default fallback
+  "default": {
+    badge: "Recommended Instrument", title: "Rosemount 3051C Pressure Transmitter — Plant Standard",
+    model: "Rosemount 3051CD / 3051CG — 4-20 mA + HART 7",
+    category: "Pressure / DP",
+    specs: [
+      {l:"Accuracy",v:"±0.065% of span"},{l:"Stability",v:"±0.1% / 10 years"},
+      {l:"Rangeability",v:"100:1"},{l:"Protocol",v:"HART 7 / 4-20 mA"},
+      {l:"Housing",v:"Coplanar — NEMA 4X"},{l:"Approvals",v:"SIL 2, ATEX, FM"}
+    ],
+    why: "The Rosemount 3051C is the world's most-installed pressure transmitter — over 10 million in service. It handles pressure, differential pressure, and level measurement on the same coplanar body design, simplifying your plant standard and spare parts inventory. With 10-year stability and SIL 2 certification, it satisfies both reliability and safety requirements.",
+    sales: "Ask your customer about their current plant standard: if they're already using Rosemount, the 3051 is likely in their instrument spec — ask if they have remaining budget on their current project for upgrades to HART 7 or wireless. If they're using a competitor, ask: 'Would you like to see our 10-year cost comparison? The 3051's stability means fewer calibration events over the device life.'",
+    tags: ["AMS Device Manager","HART 7","DeltaV Ready","SIL 2","PlantWeb","World Standard"],
+    also: [
+      {model:"Rosemount 8800D Vortex", use:"For flow measurement — multivariable, no moving parts"},
+      {model:"Micro Motion ELITE Coriolis", use:"For mass flow and custody transfer at highest accuracy"},
+      {model:"Rosemount 644 Temperature Transmitter", use:"For temperature measurement — pair with pressure for heat duty calculations"}
+    ]
+  }
+};
+
+// State
+let step = 0;
+let answers = {};
+
+function getKey() {
+  const q = questions;
+  return [
+    answers[q[0].key] || '',
+    answers[q[1].key] || '',
+    answers[q[2].key] || '',
+    answers[q[3].key] || '',
+    answers[q[4].key] || ''
+  ].join('-');
+}
+
+function lookupResult() {
+  const key = getKey();
+  if (R[key]) return R[key];
+  // Try 3-key prefix
+  const k3 = key.split('-').slice(0,3).join('-');
+  for (const k of Object.keys(R)) { if (k.startsWith(k3) && k !== 'default') return R[k]; }
+  // Try 2-key prefix
+  const k2 = key.split('-').slice(0,2).join('-');
+  for (const k of Object.keys(R)) { if (k.startsWith(k2) && k !== 'default') return R[k]; }
+  // Try 1-key
+  const k1 = key.split('-')[0];
+  for (const k of Object.keys(R)) { if (k.startsWith(k1 + '-') && k !== 'default') return R[k]; }
+  return R['default'];
+}
+
+function renderQuestion() {
+  const q = questions[step];
+  document.getElementById('q-title').textContent = q.title;
+  document.getElementById('q-hint').textContent = q.hint;
+  document.getElementById('progress-label').textContent = `Step ${step+1} of 5`;
+  document.getElementById('progress-fill').style.width = ((step+1)/5*100)+'%';
+  for (let i = 0; i < 5; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    d.className = 'progress-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+  }
+  const grid = document.getElementById('q-options');
+  grid.innerHTML = '';
+  q.opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[q.key] === opt.val ? ' selected' : '');
+    btn.innerHTML = `<span class="icon">${opt.icon}</span><span class="title">${opt.title}</span><span class="desc">${opt.desc}</span>`;
+    btn.onclick = () => {
+      answers[q.key] = opt.val;
+      grid.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('btn-next').disabled = false;
+    };
+    grid.appendChild(btn);
+  });
+  document.getElementById('btn-back').style.display = step > 0 ? 'inline-block' : 'none';
+  document.getElementById('btn-next').disabled = !answers[q.key];
+  document.getElementById('btn-next').textContent = step < 4 ? 'Next →' : 'Find My Instrument →';
+}
+
+function goNext() {
+  if (step < 4) { step++; renderQuestion(); }
+  else showResult();
+}
+
+function goBack() {
+  if (step > 0) { step--; renderQuestion(); }
+}
+
+function showResult() {
+  document.getElementById('question-wrap').style.display = 'none';
+  document.getElementById('result-wrap').style.display = 'block';
+  const rec = lookupResult();
+  document.getElementById('r-badge').textContent = rec.badge;
+  document.getElementById('r-title').textContent = rec.title;
+  document.getElementById('r-model').textContent = rec.model;
+  document.getElementById('r-why').textContent = rec.why;
+  document.getElementById('r-sales').textContent = rec.sales;
+  const specs = document.getElementById('r-specs');
+  specs.innerHTML = rec.specs.map(s => `<div class="spec-card"><div class="spec-label">${s.l}</div><div class="spec-value">${s.v}</div></div>`).join('');
+  const tags = document.getElementById('r-tags');
+  tags.innerHTML = rec.tags.map(t => {
+    let cls = 'tag';
+    if (t.includes('AMS')) cls += ' ams';
+    else if (t.includes('Wireless')) cls += ' wireless';
+    else if (t.includes('DeltaV')) cls += ' deltav';
+    return `<span class="${cls}">${t}</span>`;
+  }).join('');
+  const also = document.getElementById('r-also');
+  also.innerHTML = rec.also.map(a => `<div class="also-item"><strong>${a.model}</strong> — ${a.use}</div>`).join('');
+}
+
+function restart() {
+  step = 0; answers = {};
+  document.getElementById('question-wrap').style.display = 'block';
+  document.getElementById('result-wrap').style.display = 'none';
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
