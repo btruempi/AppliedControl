@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- CANVAS_HEIGHT: 500 -->
+<!-- Dublin Core Metadata -->
+<meta name="DC.title" content="PID Control Loop MicroSim">
+<meta name="DC.subject" content="PID controller, process control, proportional integral derivative">
+<meta name="DC.description" content="Interactive simulation of PID feedback control showing process response to setpoint changes with adjustable P, I, D gains.">
+<meta name="DC.creator" content="Applied Control Valve Automation Mastery">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PID Control Loop MicroSim</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    height: 502px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #top-bar {
+    background: #0a2342;
+    color: #e8f4f8;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #top-bar span { color: #5dade2; }
+  #main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  #canvas-area {
+    flex: 1;
+    position: relative;
+    background: #fff;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  #side-panel {
+    width: 210px;
+    background: #f0f4f8;
+    border-left: 1px solid #dde5ee;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+  }
+  .ctrl-group {
+    background: #fff;
+    border: 1px solid #dde5ee;
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .ctrl-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #0a2342;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .slider-row label {
+    font-size: 11px;
+    color: #444;
+    width: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .slider-row input[type=range] {
+    flex: 1;
+    height: 4px;
+    accent-color: #0a2342;
+  }
+  .slider-row .val {
+    font-size: 11px;
+    color: #0a2342;
+    font-weight: 700;
+    width: 32px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .preset-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .preset-btn {
+    padding: 5px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+    border: 1px solid;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background .15s;
+    text-align: left;
+  }
+  .preset-btn.osc  { border-color: #c0392b; color: #c0392b; background: #fdf0ef; }
+  .preset-btn.slug { border-color: #7f8c8d; color: #5a6a6a; background: #f4f6f6; }
+  .preset-btn.good { border-color: #1a8a5a; color: #1a8a5a; background: #eafaf3; }
+  .preset-btn:hover { filter: brightness(.93); }
+  .readout-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    padding: 2px 0;
+    border-bottom: 1px solid #f0f4f8;
+  }
+  .readout-row:last-child { border-bottom: none; }
+  .readout-row .rlabel { color: #666; }
+  .readout-row .rval { font-weight: 700; font-variant-numeric: tabular-nums; color: #0a2342; }
+  .rval.err { color: #c0392b; }
+  .rval.good { color: #1a8a5a; }
+  #step-btn {
+    width: 100%;
+    padding: 7px;
+    background: #0a2342;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .05em;
+  }
+  #step-btn:hover { background: #143060; }
+  #reset-btn {
+    width: 100%;
+    padding: 5px;
+    background: #e8edf3;
+    color: #444;
+    border: 1px solid #cdd5de;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  #reset-btn:hover { background: #dde3eb; }
+</style>
+</head>
+<body>
+<div id="top-bar">
+  Applied Control &mdash; <span>PID Control Loop</span> &nbsp;·&nbsp; Adjust gains and step the setpoint
+</div>
+<div id="main">
+  <div id="canvas-area">
+    <canvas id="c"></canvas>
+  </div>
+  <div id="side-panel">
+    <!-- Gains -->
+    <div class="ctrl-group">
+      <div class="ctrl-label">Controller Gains</div>
+      <div class="slider-row">
+        <label>P</label>
+        <input type="range" id="kp" min="0" max="5" step="0.05" value="1.5">
+        <span class="val" id="kp-val">1.50</span>
+      </div>
+      <div class="slider-row">
+        <label>I</label>
+        <input type="range" id="ki" min="0" max="3" step="0.02" value="0.5">
+        <span class="val" id="ki-val">0.50</span>
+      </div>
+      <div class="slider-row">
+        <label>D</label>
+        <input type="range" id="kd" min="0" max="2" step="0.02" value="0.1">
+        <span class="val" id="kd-val">0.10</span>
+      </div>
+    </div>
+
+    <!-- Process tuning knob -->
+    <div class="ctrl-group">
+      <div class="ctrl-label">Process Dynamics</div>
+      <div class="slider-row">
+        <label style="width:44px;font-size:10px;">Lag τ</label>
+        <input type="range" id="tau" min="1" max="20" step="0.5" value="5">
+        <span class="val" id="tau-val">5.0s</span>
+      </div>
+      <div class="slider-row">
+        <label style="width:44px;font-size:10px;">Dead θ</label>
+        <input type="range" id="theta" min="0" max="10" step="0.5" value="1">
+        <span class="val" id="theta-val">1.0s</span>
+      </div>
+    </div>
+
+    <!-- Presets -->
+    <div class="ctrl-group">
+      <div class="ctrl-label">Presets</div>
+      <div class="preset-row">
+        <button class="preset-btn osc" onclick="applyPreset('osc')">🔴 Oscillating (high P)</button>
+        <button class="preset-btn slug" onclick="applyPreset('slug')">⚪ Sluggish (low P/I)</button>
+        <button class="preset-btn good" onclick="applyPreset('good')">🟢 Well-tuned</button>
+      </div>
+    </div>
+
+    <!-- Live readouts -->
+    <div class="ctrl-group">
+      <div class="ctrl-label">Live Readouts</div>
+      <div class="readout-row"><span class="rlabel">Setpoint (SP)</span><span class="rval" id="r-sp">50.0%</span></div>
+      <div class="readout-row"><span class="rlabel">Process (PV)</span><span class="rval" id="r-pv">50.0%</span></div>
+      <div class="readout-row"><span class="rlabel">Error (e)</span><span class="rval" id="r-err">0.0%</span></div>
+      <div class="readout-row"><span class="rlabel">Output (CO)</span><span class="rval" id="r-co">50.0%</span></div>
+      <div class="readout-row"><span class="rlabel">Integral sum</span><span class="rval" id="r-int">0.0</span></div>
+    </div>
+
+    <!-- Actions -->
+    <button id="step-btn" onclick="stepSetpoint()">▶ Step Setpoint +20%</button>
+    <button id="reset-btn" onclick="resetSim()">↺ Reset</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+// Simulation state
+let Kp = 1.5, Ki = 0.5, Kd = 0.1;
+let tau = 5.0, theta = 1.0;
+let SP = 50, PV = 50, CO = 50;
+let integral = 0, prevErr = 0;
+let deadQueue = []; // dead-time buffer
+const DT = 0.05; // seconds per tick
+const TMAX = 120; // seconds of history
+const PIXELS_PER_SEC = 3.5;
+
+let timeHistory = [], pvHistory = [], spHistory = [], coHistory = [];
+let t = 0;
+let running = true;
+let raf;
+
+function resetSim() {
+  t = 0; PV = 50; CO = 50; SP = 50;
+  integral = 0; prevErr = 0;
+  deadQueue = [];
+  timeHistory = []; pvHistory = []; spHistory = []; coHistory = [];
+}
+
+function stepSetpoint() {
+  SP = Math.min(90, SP + 20);
+}
+
+function applyPreset(type) {
+  const presets = {
+    osc:  { kp: 4.5, ki: 0.8, kd: 0.0 },
+    slug: { kp: 0.4, ki: 0.1, kd: 0.0 },
+    good: { kp: 1.5, ki: 0.5, kd: 0.1 },
+  };
+  const p = presets[type];
+  document.getElementById('kp').value = p.kp;
+  document.getElementById('ki').value = p.ki;
+  document.getElementById('kd').value = p.kd;
+  Kp = p.kp; Ki = p.ki; Kd = p.kd;
+  updateSliderLabels();
+  resetSim();
+  stepSetpoint();
+}
+
+function updateSliderLabels() {
+  document.getElementById('kp-val').textContent = Kp.toFixed(2);
+  document.getElementById('ki-val').textContent = Ki.toFixed(2);
+  document.getElementById('kd-val').textContent = Kd.toFixed(2);
+  document.getElementById('tau-val').textContent = tau.toFixed(1) + 's';
+  document.getElementById('theta-val').textContent = theta.toFixed(1) + 's';
+}
+
+// Wire up sliders
+['kp','ki','kd'].forEach(id => {
+  document.getElementById(id).addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (id === 'kp') Kp = v;
+    if (id === 'ki') Ki = v;
+    if (id === 'kd') Kd = v;
+    updateSliderLabels();
+  });
+});
+document.getElementById('tau').addEventListener('input', e => {
+  tau = parseFloat(e.target.value); updateSliderLabels(); resetSim();
+});
+document.getElementById('theta').addEventListener('input', e => {
+  theta = parseFloat(e.target.value); updateSliderLabels(); resetSim();
+});
+
+function tick() {
+  // PID calculation
+  const err = SP - PV;
+  integral += err * DT;
+  const deriv = (err - prevErr) / DT;
+  prevErr = err;
+  let rawCO = CO + (Kp * (err - (prevErr - err)) + Ki * err * DT + Kd * (err - prevErr) / DT);
+  // Simpler: compute CO fresh each tick from accumulated integral
+  let newCO = Kp * err + Ki * integral + Kd * (err - prevErr) / DT;
+  newCO = Math.max(0, Math.min(100, newCO + 50)); // bias at 50
+  CO = newCO;
+
+  // Dead time buffer: queue CO values, use value from theta seconds ago
+  deadQueue.push(CO);
+  const deadSteps = Math.round(theta / DT);
+  const effectiveCO = deadQueue.length > deadSteps ? deadQueue[deadQueue.length - 1 - deadSteps] : deadQueue[0];
+
+  // First-order process: τ dPV/dt = (effectiveCO - PV)
+  const dPV = (effectiveCO - PV) / tau * DT;
+  PV = Math.max(0, Math.min(100, PV + dPV));
+
+  // Clamp history to TMAX seconds
+  timeHistory.push(t);
+  pvHistory.push(PV);
+  spHistory.push(SP);
+  coHistory.push(CO);
+  const maxPts = TMAX / DT;
+  if (timeHistory.length > maxPts) {
+    timeHistory.shift(); pvHistory.shift(); spHistory.shift(); coHistory.shift();
+  }
+
+  t += DT;
+
+  // Update readouts
+  const errNow = SP - PV;
+  document.getElementById('r-sp').textContent = SP.toFixed(1) + '%';
+  document.getElementById('r-pv').textContent = PV.toFixed(1) + '%';
+  const errEl = document.getElementById('r-err');
+  errEl.textContent = errNow.toFixed(1) + '%';
+  errEl.className = 'rval ' + (Math.abs(errNow) < 1 ? 'good' : Math.abs(errNow) > 10 ? 'err' : '');
+  document.getElementById('r-co').textContent = CO.toFixed(1) + '%';
+  document.getElementById('r-int').textContent = integral.toFixed(1);
+}
+
+function draw() {
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const PAD = { top: 36, bot: 52, left: 48, right: 14 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bot;
+
+  // Background
+  ctx.fillStyle = '#fafcff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Chart area border
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#cdd5de';
+  ctx.lineWidth = 1;
+  ctx.fillRect(PAD.left, PAD.top, cW, cH);
+  ctx.strokeRect(PAD.left, PAD.top, cW, cH);
+
+  // Grid lines
+  ctx.strokeStyle = '#e8edf3';
+  ctx.lineWidth = 0.5;
+  for (let pct = 0; pct <= 100; pct += 20) {
+    const y = PAD.top + cH - (pct / 100) * cH;
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(PAD.left + cW, y); ctx.stroke();
+  }
+  for (let s = 0; s <= TMAX; s += 20) {
+    const x = PAD.left + (s / TMAX) * cW;
+    if (x <= PAD.left + cW) {
+      ctx.beginPath(); ctx.moveTo(x, PAD.top); ctx.lineTo(x, PAD.top + cH); ctx.stroke();
+    }
+  }
+
+  // Y axis labels
+  ctx.fillStyle = '#666';
+  ctx.font = '10px IBM Plex Mono, monospace';
+  ctx.textAlign = 'right';
+  for (let pct = 0; pct <= 100; pct += 20) {
+    const y = PAD.top + cH - (pct / 100) * cH;
+    ctx.fillText(pct + '%', PAD.left - 4, y + 4);
+  }
+
+  // X axis labels
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#666';
+  for (let s = 0; s <= TMAX; s += 20) {
+    const x = PAD.left + (s / TMAX) * cW;
+    ctx.fillText(s + 's', x, PAD.top + cH + 14);
+  }
+
+  // Axis titles
+  ctx.save();
+  ctx.translate(12, PAD.top + cH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.font = '11px system-ui';
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'center';
+  ctx.fillText('Process Variable / CO (%)', 0, 0);
+  ctx.restore();
+
+  ctx.font = '11px system-ui';
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'center';
+  ctx.fillText('Time (seconds)', PAD.left + cW / 2, H - 6);
+
+  if (timeHistory.length < 2) return;
+
+  const tStart = timeHistory[0];
+  const tEnd = timeHistory[timeHistory.length - 1];
+  const tSpan = Math.max(TMAX, tEnd - tStart);
+
+  function xOf(ts) { return PAD.left + ((ts - tStart) / tSpan) * cW; }
+  function yOf(v)  { return PAD.top + cH - (v / 100) * cH; }
+
+  function plotLine(hist, color, width, dash) {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.setLineDash(dash || []);
+    for (let i = 0; i < timeHistory.length; i++) {
+      const x = xOf(timeHistory[i]), y = yOf(hist[i]);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // CO (controller output) — light blue
+  plotLine(coHistory, '#85c1e9', 1.2, [4, 3]);
+  // SP (setpoint) — orange dashed
+  plotLine(spHistory, '#e67e22', 1.8, [6, 4]);
+  // PV (process variable) — dark teal solid
+  plotLine(pvHistory, '#0a6b5e', 2.2);
+
+  // Current time marker
+  const curX = xOf(timeHistory[timeHistory.length - 1]);
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 0.8;
+  ctx.beginPath(); ctx.moveTo(curX, PAD.top); ctx.lineTo(curX, PAD.top + cH); ctx.stroke();
+
+  // Title / legend
+  ctx.font = 'bold 12px IBM Plex Sans, system-ui';
+  ctx.fillStyle = '#0a2342';
+  ctx.textAlign = 'left';
+  ctx.fillText('PID Closed-Loop Response', PAD.left + 4, PAD.top - 8);
+
+  // Legend chips
+  const items = [
+    { color: '#0a6b5e', label: 'PV (Process)', width: 2.2, dash: [] },
+    { color: '#e67e22', label: 'SP (Setpoint)', width: 1.8, dash: [5,3] },
+    { color: '#85c1e9', label: 'CO (Valve)', width: 1.2, dash: [3,3] },
+  ];
+  let lx = PAD.left + 200;
+  items.forEach(it => {
+    ctx.save();
+    ctx.strokeStyle = it.color;
+    ctx.lineWidth = it.width;
+    ctx.setLineDash(it.dash);
+    ctx.beginPath();
+    ctx.moveTo(lx, PAD.top - 8);
+    ctx.lineTo(lx + 22, PAD.top - 8);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+    ctx.font = '10px system-ui';
+    ctx.fillStyle = '#444';
+    ctx.textAlign = 'left';
+    ctx.fillText(it.label, lx + 26, PAD.top - 4);
+    lx += 100;
+  });
+}
+
+function resize() {
+  const el = document.getElementById('canvas-area');
+  canvas.width = el.clientWidth;
+  canvas.height = el.clientHeight;
+}
+
+function loop() {
+  for (let i = 0; i < 4; i++) tick(); // 4 ticks per frame ≈ real-time
+  draw();
+  raf = requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', () => { resize(); });
+resize();
+resetSim();
+loop();
+</script>
+</body>
+</html>

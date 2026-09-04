@@ -1,0 +1,2166 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An intelligent textbook for sales engineers and technical specialists. Build subject matter expertise across Applied Control's complete portfolio: valves, actuators, DeltaV, measurement, safety systems, and industry applications.">
+      
+      
+        <meta name="author" content="Applied Control / Claude">
+      
+      
+        <link rel="canonical" href="https://appliedcontrol.github.io/valve-automation-textbook/chapters/ch07/">
+      
+      
+        <link rel="prev" href="../ch06/">
+      
+      
+        <link rel="next" href="../ch08/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Ch 7: Pressure &amp; Safety Relief Systems - Applied Control — Valve Automation Mastery</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"IBM Plex Sans";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-7-pressure-safety-relief-systems" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Applied Control — Valve Automation Mastery" class="md-header__button md-logo" aria-label="Applied Control — Valve Automation Mastery" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Applied Control — Valve Automation Mastery
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ch 7: Pressure &amp; Safety Relief Systems
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="orange" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="orange" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../learning-graph/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Learning Graph
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch01/" class="md-tabs__link">
+          
+  
+  
+  Part I — Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ch04/" class="md-tabs__link">
+          
+  
+  
+  Part II — Valve Types &amp; Selection
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch09/" class="md-tabs__link">
+          
+  
+  
+  Part III — Actuation &amp; Control
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch12/" class="md-tabs__link">
+          
+  
+  
+  Part IV — Measurement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch14/" class="md-tabs__link">
+          
+  
+  
+  Part V — Reliability &amp; Compliance
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch16/" class="md-tabs__link">
+          
+  
+  
+  Part VI — Applications &amp; Sales
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Applied Control — Valve Automation Mastery" class="md-nav__button md-logo" aria-label="Applied Control — Valve Automation Mastery" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Applied Control — Valve Automation Mastery
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning-graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learning Graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part I — Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part I — Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 1: Process Control Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 2: Fluid Mechanics for Valve Engineers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 3: Control Loop Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part II — Valve Types &amp; Selection
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part II — Valve Types &amp; Selection
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 4: Control Valves — Bodies &amp; Trim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 5: Valve Sizing &amp; Flow Coefficients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 6: Isolation, Choke &amp; Specialty Valves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 7: Pressure &amp; Safety Relief Systems
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 7: Pressure &amp; Safety Relief Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#71-why-pressure-relief-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Why Pressure Relief Exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#72-spring-loaded-pressure-relief-valves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Spring-Loaded Pressure Relief Valves
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.2 Spring-Loaded Pressure Relief Valves">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prv-vs-psv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PRV vs. PSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-orifice-sizes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Orifice Sizes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#73-sizing-pressure-relief-valves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Sizing Pressure Relief Valves
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.3 Sizing Pressure Relief Valves">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-relief-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Relief Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sizing-for-vaporgas-api-520" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing for Vapor/Gas (API 520)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sizing-for-liquid-api-520" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing for Liquid (API 520)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#74-pilot-operated-relief-valves-porvs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Pilot-Operated Relief Valves (PORVs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#75-rupture-discs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Rupture Discs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#76-prv-maintenance-and-certification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 PRV Maintenance and Certification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.6 PRV Maintenance and Certification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-prv-life-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The PRV Life Cycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-prv-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common PRV Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sales-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sales Implications
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 8: Steam Systems &amp; Traps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part III — Actuation &amp; Control
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part III — Actuation &amp; Control
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 9: Actuators — Pneumatic, Electric, Hydraulic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 10: Positioners &amp; Digital Valve Controllers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 11: Emerson DeltaV DCS &amp; SIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part IV — Measurement
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part IV — Measurement
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 12: Flow Measurement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 13: Pressure, Temperature, Level &amp; Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7">
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part V — Reliability &amp; Compliance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part V — Reliability &amp; Compliance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 14: Asset Reliability &amp; Valve Diagnostics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 15: Standards, Codes &amp; Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8">
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part VI — Applications &amp; Sales
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part VI — Applications &amp; Sales
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 16: Industry Applications — O&amp;G, Refining, Power, Chemical
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 17: Life Sciences, Water &amp; HVAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 18: Sales Engineering — Selection &amp; Value Selling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-7-pressure-safety-relief-systems">Chapter 7: Pressure &amp; Safety Relief Systems</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Learning Objectives</p>
+<ul>
+<li><strong>Remember:</strong> State the difference between a pressure relief valve (PRV) and a pressure safety valve (PSV), and identify which API standard governs each</li>
+<li><strong>Understand:</strong> Explain the operating principle of a spring-loaded PRV and describe what happens during simmer, pop, and reseat</li>
+<li><strong>Apply:</strong> Determine the required relief capacity (SCFM or GPM) for a fire case and blocked outlet case given vessel and piping data</li>
+<li><strong>Analyze:</strong> Identify conditions that cause a PRV to chatter and explain the root cause</li>
+<li><strong>Evaluate:</strong> Compare the advantages of a pilot-operated relief valve (PORV) vs. a spring-loaded PRV for a high-pressure gas application with a narrow operating margin</li>
+</ul>
+</div>
+<hr>
+<h2 id="71-why-pressure-relief-exists">7.1 Why Pressure Relief Exists</h2>
+<p>Every pressure vessel, heat exchanger, pump, and piping system has a <strong>maximum allowable working pressure (MAWP)</strong>. If process upsets, control failures, or fire cases exceed the MAWP, the equipment fails — catastrophically in high-pressure service. <strong>Pressure relief devices</strong> are the last line of defense — a passive, automatic protection device that opens to vent excess pressure and reseats when pressure returns to normal.</p>
+<p><strong>Regulatory framework:</strong>
+- <strong>ASME Section VIII, Division 1:</strong> Design and construction of pressure vessels; mandates relief device installation
+- <strong>API 520 Part I:</strong> Sizing of pressure relieving devices
+- <strong>API 520 Part II:</strong> Installation of pressure relieving devices
+- <strong>API 521:</strong> Guide for pressure-relieving and depressuring systems (disposal)
+- <strong>API 526:</strong> Flanged steel pressure relief valves (standard orifice sizes)
+- <strong>OSHA PSM (29 CFR 1910.119):</strong> Process Safety Management — relief system documentation requirements</p>
+<hr>
+<h2 id="72-spring-loaded-pressure-relief-valves">7.2 Spring-Loaded Pressure Relief Valves</h2>
+<p>The spring-loaded PRV is the most common pressure relief device. A <strong>spring</strong> holds a <strong>disc</strong> against a <strong>nozzle seat</strong>. When inlet pressure overcomes spring force, the disc lifts, venting fluid until pressure drops and the spring reseats the disc.</p>
+<h3 id="key-terminology">Key Terminology</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Set pressure</strong></td>
+<td>Pressure at which the PRV begins to open (pops)</td>
+</tr>
+<tr>
+<td><strong>Overpressure</strong></td>
+<td>Allowable pressure above set at full flow (typically 10% for process, 21% for fire case)</td>
+</tr>
+<tr>
+<td><strong>Accumulation</strong></td>
+<td>Maximum pressure above MAWP during a relief event</td>
+</tr>
+<tr>
+<td><strong>Blowdown</strong></td>
+<td>Pressure drop below set pressure before the PRV reseats</td>
+</tr>
+<tr>
+<td><strong>Simmer</strong></td>
+<td>Slight leakage/seepage just below set pressure — indicates valve is near opening</td>
+</tr>
+<tr>
+<td><strong>Chatter</strong></td>
+<td>Rapid opening and closing — destructive; occurs when PRV is oversized or inlet pressure drop is too high</td>
+</tr>
+<tr>
+<td><strong>Back pressure</strong></td>
+<td>Pressure on the outlet (discharge) side — affects set pressure in conventional PRVs</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prv-vs-psv">PRV vs. PSV</h3>
+<p>The terms are often used interchangeably, but:
+- <strong>PRV (Pressure Relief Valve):</strong> Opens proportionally to overpressure — primarily for liquid service where proportional flow is needed
+- <strong>PSV (Pressure Safety Valve):</strong> Opens with a "pop" action — required for compressible fluids (gas, steam) where the full area must be exposed quickly
+- <strong>Safety Relief Valve:</strong> Dual-purpose — can operate as either PRV or PSV; most process industry valves are this type</p>
+<h3 id="api-orifice-sizes">API Orifice Sizes</h3>
+<p>API 526 standardizes relief valve orifice sizes by letter designation:</p>
+<table>
+<thead>
+<tr>
+<th>Orifice</th>
+<th>Area (in²)</th>
+<th>Common applications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D</td>
+<td>0.110</td>
+<td>Small liquid lines</td>
+</tr>
+<tr>
+<td>E</td>
+<td>0.196</td>
+<td>Small vapor/gas</td>
+</tr>
+<tr>
+<td>F</td>
+<td>0.307</td>
+<td>Medium service</td>
+</tr>
+<tr>
+<td>G</td>
+<td>0.503</td>
+<td>Medium-large</td>
+</tr>
+<tr>
+<td>H</td>
+<td>0.785</td>
+<td>Large process</td>
+</tr>
+<tr>
+<td>J</td>
+<td>1.287</td>
+<td>Very large process</td>
+</tr>
+<tr>
+<td>K</td>
+<td>1.838</td>
+<td>Large steam</td>
+</tr>
+<tr>
+<td>L</td>
+<td>2.853</td>
+<td>Very large steam</td>
+</tr>
+<tr>
+<td>M</td>
+<td>3.600</td>
+<td>Largest standard</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="73-sizing-pressure-relief-valves">7.3 Sizing Pressure Relief Valves</h2>
+<p>Relief valve sizing begins with identifying the <strong>governing relief case</strong> — the scenario requiring the largest relief capacity.</p>
+<h3 id="common-relief-cases">Common Relief Cases</h3>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Trigger</th>
+<th>Governing fluid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Blocked outlet</strong></td>
+<td>Downstream block valve closes while pump/compressor runs</td>
+<td>Liquid or vapor at pump/compressor rated flow</td>
+</tr>
+<tr>
+<td><strong>Control valve fails open</strong></td>
+<td>Upstream CV opens fully</td>
+<td>Maximum inlet flow</td>
+</tr>
+<tr>
+<td><strong>Fire case</strong></td>
+<td>External fire heats vessel liquid</td>
+<td>Vapor at heat input rate</td>
+</tr>
+<tr>
+<td><strong>Cooling failure</strong></td>
+<td>Cooling water loss — reaction exotherm</td>
+<td>Vapor at heat generation rate</td>
+</tr>
+<tr>
+<td><strong>Power failure</strong></td>
+<td>Pumps/compressors stop; control valves fail</td>
+<td>Depends on fail-safe action</td>
+</tr>
+<tr>
+<td><strong>Tube rupture</strong></td>
+<td>High-pressure shell fluid enters low-pressure tubes</td>
+<td>High-pressure fluid at exchanger differential</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sizing-for-vaporgas-api-520">Sizing for Vapor/Gas (API 520)</h3>
+<p>$$A = \frac{W}{C \cdot K_d \cdot P_1 \cdot K_b \cdot K_c} \cdot \sqrt{\frac{T \cdot Z}{M}}$$</p>
+<p>Where:
+- W = required flow (lb/hr)
+- C = gas constant based on ratio of specific heats (k)
+- K_d = effective discharge coefficient (typically 0.975 for gas)
+- P_1 = relieving pressure (set + overpressure + atmospheric), psia
+- K_b = back pressure correction factor
+- K_c = combination correction (1.0 if no rupture disc)
+- T = relieving temperature (°R)
+- Z = compressibility factor
+- M = molecular weight</p>
+<h3 id="sizing-for-liquid-api-520">Sizing for Liquid (API 520)</h3>
+<p>$$A = \frac{Q}{38.0 \cdot K_d \cdot K_w \cdot K_c \cdot K_v} \cdot \sqrt{\frac{G}{P_1 - P_2}}$$</p>
+<p>Where Q = required flow (GPM), G = specific gravity, P₁ = set pressure (psia), P₂ = back pressure (psia).</p>
+<hr>
+<h2 id="74-pilot-operated-relief-valves-porvs">7.4 Pilot-Operated Relief Valves (PORVs)</h2>
+<p>A <strong>pilot-operated relief valve</strong> uses process pressure to keep the main disc closed — the inlet pressure acts on a larger area on top of the disc than on the bottom, creating a net closing force. A small pilot valve senses inlet pressure and releases the top-loading when set pressure is reached, allowing the main disc to open fully.</p>
+<p><strong>Advantages over spring-loaded:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Advantage</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tight shutoff near set pressure</td>
+<td>No simmer; can operate at 98% of set vs. 90% for spring-loaded</td>
+</tr>
+<tr>
+<td>No back pressure effect</td>
+<td>Pilot controls opening — outlet pressure doesn't shift set point</td>
+</tr>
+<tr>
+<td>Full-open immediately</td>
+<td>No proportional opening; instantly at full capacity</td>
+</tr>
+<tr>
+<td>Larger orifice in smaller body</td>
+<td>No spring constraint on disc size</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Applications:</strong>
+- High-pressure gas service where operating pressure is close to set pressure
+- Large vapor relief requiring minimum simmer
+- Services with significant back pressure (manifolded relief header)</p>
+<p><strong>Limitation:</strong> More complex than spring-loaded; pilot can plug in dirty service; requires field testing for pilot valve function verification.</p>
+<hr>
+<h2 id="75-rupture-discs">7.5 Rupture Discs</h2>
+<p>A <strong>rupture disc</strong> is a non-reclosing pressure relief device — a thin metal disc that bursts at a set pressure and does not reseat. Once ruptured, the system must be shut down to replace it.</p>
+<p><strong>When rupture discs are used:</strong></p>
+<ul>
+<li><strong>In combination with a PRV:</strong> The rupture disc is installed upstream of the PRV to protect the PRV seat from corrosive fluid. The disc is sized slightly below the PRV set pressure; if the PRV fails to reseat and leaks, the disc ruptures before the PRV set is reached</li>
+<li><strong>As the sole relief device:</strong> For toxic or hazardous fluids where any PRV simmer is unacceptable; when process fluid would solidify in a PRV; for very low-set-pressure applications where a spring-loaded PRV cannot be built</li>
+<li><strong>Full-flow discharge:</strong> Rupture disc provides zero restriction when open — maximum discharge coefficient</li>
+</ul>
+<p><strong>Applied Control's valve shop certifies and repairs PRVs, but rupture discs are replace-on-fail items.</strong> The value-add is ensuring the correct disc spec (burst pressure, material, size) is maintained and documented.</p>
+<hr>
+<h2 id="76-prv-maintenance-and-certification">7.6 PRV Maintenance and Certification</h2>
+<p><strong>ASME requires that PRVs be tested and certified.</strong> A PRV that has not been tested within the required interval cannot be considered reliable and may not satisfy OSHA PSM or process safety documentation requirements.</p>
+<h3 id="the-prv-life-cycle">The PRV Life Cycle</h3>
+<ol>
+<li><strong>As-found testing:</strong> PRV is removed from service and popped on a test bench at the Applied Control valve shop. As-found set pressure is recorded.</li>
+<li><strong>Disassembly and inspection:</strong> Disc, nozzle, and spring are inspected. Corrosion, erosion, and seat damage are documented.</li>
+<li><strong>Reconditioning:</strong> Seats are lapped; springs are replaced if fatigued or corroded; O-rings and soft goods are replaced.</li>
+<li><strong>As-left testing:</strong> PRV is popped again at the certified set pressure. Test report is generated.</li>
+<li><strong>Nameplate and certification:</strong> New nameplate is stamped with set pressure and test date by a National Board-certified repair facility.</li>
+<li><strong>Return to service:</strong> Test report and new tag are provided to the plant for PSM documentation.</li>
+</ol>
+<p><strong>Applied Control's National Board Certified valve shop</strong> provides full PRV testing, repair, and certification. This is a significant differentiator — most distributors ship PRVs to a factory; Applied Control turns them in days, not weeks, which is critical for turnaround planning.</p>
+<h3 id="common-prv-failures">Common PRV Failures</h3>
+<table>
+<thead>
+<tr>
+<th>Failure mode</th>
+<th>Cause</th>
+<th>Remedy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fails to open at set pressure</strong></td>
+<td>Corroded or stuck disc; spring fatigue</td>
+<td>Recondition; replace spring</td>
+</tr>
+<tr>
+<td><strong>Fails to reseat (leaks continuously)</strong></td>
+<td>Wire-drawn seat; debris on seat</td>
+<td>Lap seats; clean disc</td>
+</tr>
+<tr>
+<td><strong>Chattering</strong></td>
+<td>PRV oversized for service; excessive inlet pressure drop</td>
+<td>Right-size valve; reduce inlet line pressure drop</td>
+</tr>
+<tr>
+<td><strong>Set pressure drift</strong></td>
+<td>Spring relaxation; corrosion; thermal cycling</td>
+<td>Retest and certify on schedule</td>
+</tr>
+<tr>
+<td><strong>Frozen open (blowout)</strong></td>
+<td>Disc eroded by high-velocity discharge; seat debris</td>
+<td>Replace disc; inspect for upstream contamination</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="chapter-summary">Chapter Summary</h2>
+<p>Pressure relief valves are the last line of defense against overpressure in any process system. Spring-loaded PRVs and PSVs are the most common — set by spring compression, they open at the set pressure and reseat on blowdown. Pilot-operated relief valves provide tighter operating margins and are immune to back pressure effects. Rupture discs provide non-reclosing relief for toxic or corrosive services. API 520 governs sizing; ASME Section VIII governs construction; OSHA PSM requires documentation. Applied Control's National Board Certified valve shop provides the full PRV lifecycle service — testing, repair, certification, and return to service — that plants need to meet regulatory requirements and maintain reliable protection.</p>
+<hr>
+<h2 id="quiz">Quiz</h2>
+<div class="admonition question">
+<p class="admonition-title">Question 1 — Remember</p>
+<p>What does the term 'blowdown' mean for a PRV?</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> A) The pressure at which the PRV first opens</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> B) The maximum pressure above MAWP</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled="" checked=""><span class="task-list-indicator"></span></label> <strong>C) The pressure drop below set pressure before the PRV reseats and closes</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> D) The flow rate through the PRV at full open</li>
+</ul>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Question 2 — Understand</p>
+<p>A PRV is chattering (rapid opening and closing) in service. What are the two most likely root causes?</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled="" checked=""><span class="task-list-indicator"></span></label> <strong>A) The PRV is oversized for the actual relief flow, OR the inlet line pressure drop is too high — both cause the pressure to drop below the reseat pressure before sufficient flow develops to sustain opening</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> B) The spring is too weak</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> C) The back pressure is too high</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> D) The seat is wire-drawn</li>
+</ul>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Question 3 — Evaluate</p>
+<p>A high-pressure natural gas vessel operates at 1,450 PSIG MAWP. The normal operating pressure is 1,380 PSIG. A spring-loaded PRV set at 1,450 PSIG would operate at 95% of set pressure continuously. What problem does this create, and what is the better solution?</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> A) No problem — the PRV is designed for this</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled="" checked=""><span class="task-list-indicator"></span></label> <strong>B) Continuous simmer (leakage) near set pressure will wire-draw the seat over time. A pilot-operated relief valve (PORV) provides bubble-tight shutoff up to 98% of set pressure — the correct solution for tight operating margins in gas service</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> C) Use a larger spring-loaded PRV</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> D) Increase MAWP of the vessel</li>
+</ul>
+</div>
+<hr>
+<h2 id="sales-implications">Sales Implications</h2>
+<div class="admonition tip">
+<p class="admonition-title">Sales bridge — PRV services to Applied Control value</p>
+<ol>
+<li><strong>The National Board certification is the door-opener.</strong> Ask: 'Who certifies your PRVs? How long does it take to get one back?' Applied Control's certified shop can turn a PRV in 2–3 days during a turnaround vs. 2–3 weeks at the factory. For a plant with 50 PRVs in a turnaround window, that's the difference between making schedule and not.</li>
+<li><strong>PSM documentation drives repeat business.</strong> A plant under OSHA PSM must maintain test records for every PRV. Applied Control provides the test certificate, the repair report, and can interface with the plant's PSM system. Position this as a service contract, not a one-time repair.</li>
+<li><strong>Discover the as-found set pressure.</strong> When Applied Control tests a PRV and finds it is significantly off its certified set pressure, that's a safety finding the plant must act on — and a relationship-deepening moment that no catalog distributor can provide.</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden="">
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"></path></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"></path></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden="">
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thank you for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden="">
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for letting us know. Help us improve this page.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.appliedcontrol.com" target="_blank" rel="noopener" title="www.appliedcontrol.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.suggest", "content.code.copy", "content.tabs.link", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

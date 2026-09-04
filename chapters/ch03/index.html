@@ -1,0 +1,2541 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An intelligent textbook for sales engineers and technical specialists. Build subject matter expertise across Applied Control's complete portfolio: valves, actuators, DeltaV, measurement, safety systems, and industry applications.">
+      
+      
+        <meta name="author" content="Applied Control / Claude">
+      
+      
+        <link rel="canonical" href="https://appliedcontrol.github.io/valve-automation-textbook/chapters/ch03/">
+      
+      
+        <link rel="prev" href="../ch02/">
+      
+      
+        <link rel="next" href="../ch04/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Ch 3: Control Loop Basics - Applied Control — Valve Automation Mastery</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"IBM Plex Sans";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-3-instrumentation-sensing-the-process" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Applied Control — Valve Automation Mastery" class="md-header__button md-logo" aria-label="Applied Control — Valve Automation Mastery" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Applied Control — Valve Automation Mastery
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ch 3: Control Loop Basics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="orange" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="orange" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../learning-graph/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Learning Graph
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ch01/" class="md-tabs__link">
+          
+  
+  
+  Part I — Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch04/" class="md-tabs__link">
+          
+  
+  
+  Part II — Valve Types &amp; Selection
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch09/" class="md-tabs__link">
+          
+  
+  
+  Part III — Actuation &amp; Control
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch12/" class="md-tabs__link">
+          
+  
+  
+  Part IV — Measurement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch14/" class="md-tabs__link">
+          
+  
+  
+  Part V — Reliability &amp; Compliance
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch16/" class="md-tabs__link">
+          
+  
+  
+  Part VI — Applications &amp; Sales
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Applied Control — Valve Automation Mastery" class="md-nav__button md-logo" aria-label="Applied Control — Valve Automation Mastery" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Applied Control — Valve Automation Mastery
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning-graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learning Graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part I — Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part I — Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 1: Process Control Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 2: Fluid Mechanics for Valve Engineers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 3: Control Loop Basics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 3: Control Loop Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#31-the-four-process-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Four Process Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-the-420-ma-current-loop-the-universal-language" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 The 4–20 mA Current Loop — The Universal Language
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 The 4–20 mA Current Loop — The Universal Language">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#two-wire-vs-four-wire-transmitters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two-Wire vs. Four-Wire Transmitters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-hart-protocol-digital-on-analog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 HART Protocol — Digital on Analog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 HART Protocol — Digital on Analog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#handheld-communicators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handheld Communicators
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-rosemount-3051-the-industry-standard-pressure-transmitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Rosemount 3051 — The Industry Standard Pressure Transmitter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.4 Rosemount 3051 — The Industry Standard Pressure Transmitter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3051-model-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3051 Model Variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-seals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Seals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-a-3051-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading a 3051 Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-temperature-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Temperature Measurement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5 Temperature Measurement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rtds-resistance-temperature-detectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTDs (Resistance Temperature Detectors)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thermocouples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thermocouples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rosemount-644-temperature-transmitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rosemount 644 Temperature Transmitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-flow-measurement-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Flow Measurement Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.6 Flow Measurement Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#differential-pressure-dp-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Differential Pressure (DP) Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vortex-flow-rosemount-8800" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vortex Flow — Rosemount 8800
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coriolis-flow-micro-motion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coriolis Flow — Micro Motion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#37-level-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Level Measurement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.7 Level Measurement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dp-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DP Level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guided-wave-radar-gwr-rosemount-5300" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guided Wave Radar (GWR) — Rosemount 5300
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-contact-radar-rosemount-5408" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-Contact Radar — Rosemount 5408
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#38-wirelesshart-measurement-without-wires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 WirelessHART — Measurement Without Wires
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#39-signal-integrity-and-loop-commissioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Signal Integrity and Loop Commissioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.9 Signal Integrity and Loop Commissioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loop-checking-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop Checking Procedure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-loop-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Loop Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sales-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sales Implications
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part II — Valve Types &amp; Selection
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part II — Valve Types &amp; Selection
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 4: Control Valves — Bodies &amp; Trim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 5: Valve Sizing &amp; Flow Coefficients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 6: Isolation, Choke &amp; Specialty Valves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 7: Pressure &amp; Safety Relief Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 8: Steam Systems &amp; Traps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part III — Actuation &amp; Control
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part III — Actuation &amp; Control
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 9: Actuators — Pneumatic, Electric, Hydraulic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 10: Positioners &amp; Digital Valve Controllers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 11: Emerson DeltaV DCS &amp; SIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part IV — Measurement
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part IV — Measurement
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 12: Flow Measurement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 13: Pressure, Temperature, Level &amp; Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7">
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part V — Reliability &amp; Compliance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part V — Reliability &amp; Compliance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 14: Asset Reliability &amp; Valve Diagnostics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 15: Standards, Codes &amp; Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8">
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part VI — Applications &amp; Sales
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part VI — Applications &amp; Sales
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 16: Industry Applications — O&amp;G, Refining, Power, Chemical
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 17: Life Sciences, Water &amp; HVAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 18: Sales Engineering — Selection &amp; Value Selling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-3-instrumentation-sensing-the-process">Chapter 3: Instrumentation — Sensing the Process</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Learning Objectives</p>
+<ul>
+<li><strong>Remember:</strong> Name the four process variables most commonly measured in industrial control and identify the standard signal range for process instruments</li>
+<li><strong>Understand:</strong> Explain how a differential pressure transmitter converts a physical pressure difference into a 4–20 mA signal, and why the 4 mA live-zero matters</li>
+<li><strong>Apply:</strong> Select the correct Rosemount transmitter family for a given measurement application (pressure, temperature, flow, level)</li>
+<li><strong>Analyze:</strong> Interpret a HART device descriptor and identify which process variables, diagnostic parameters, and alerts are available remotely</li>
+<li><strong>Evaluate:</strong> Justify the selection of WirelessHART vs. wired HART for a remote measurement point, weighing cost, accuracy, and power constraints</li>
+</ul>
+</div>
+<hr>
+<h2 id="31-the-four-process-variables">3.1 The Four Process Variables</h2>
+<p>Every industrial control loop begins with measurement. The four process variables that dominate process control instrumentation are:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Symbol</th>
+<th>Common Units</th>
+<th>Typical Sensor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pressure</strong></td>
+<td>P</td>
+<td>PSIG, bar, kPa</td>
+<td>Diaphragm + capacitance cell</td>
+</tr>
+<tr>
+<td><strong>Temperature</strong></td>
+<td>T</td>
+<td>°F, °C</td>
+<td>RTD, thermocouple</td>
+</tr>
+<tr>
+<td><strong>Flow</strong></td>
+<td>F</td>
+<td>GPM, SCFM, kg/hr</td>
+<td>DP, vortex, Coriolis, magnetic</td>
+</tr>
+<tr>
+<td><strong>Level</strong></td>
+<td>L</td>
+<td>inches, %, ft</td>
+<td>DP, radar, guided wave radar</td>
+</tr>
+</tbody>
+</table>
+<p>A fifth variable — <strong>composition/analysis</strong> (pH, conductivity, dissolved oxygen, gas concentration) — is increasingly measured with online analyzers but follows the same signal and wiring conventions.</p>
+<hr>
+<h2 id="32-the-420-ma-current-loop-the-universal-language">3.2 The 4–20 mA Current Loop — The Universal Language</h2>
+<p>The <strong>4–20 mA current loop</strong> is the dominant signal standard in process instrumentation. A transmitter converts its measured variable into a proportional DC current:</p>
+<p>$$I = 4 + \frac{(PV - PV_{min})}{(PV_{max} - PV_{min})} \times 16 \text{ mA}$$</p>
+<table>
+<thead>
+<tr>
+<th>Signal (mA)</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>4 mA</strong></td>
+<td>Zero / minimum range (live zero)</td>
+</tr>
+<tr>
+<td><strong>12 mA</strong></td>
+<td>50% of range</td>
+</tr>
+<tr>
+<td><strong>20 mA</strong></td>
+<td>Full scale / maximum range</td>
+</tr>
+<tr>
+<td><strong>&lt; 3.6 mA</strong></td>
+<td>Instrument fault / broken wire</td>
+</tr>
+<tr>
+<td><strong>&gt; 21 mA</strong></td>
+<td>Over-range / saturated</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why 4 mA and not 0 mA?</strong> The live zero is the key innovation. A broken wire reads 0 mA — immediately distinguishable from a real process zero at 4 mA. The loop current also powers the transmitter (two-wire transmitters draw their operating power from the loop current itself).</p>
+<h3 id="two-wire-vs-four-wire-transmitters">Two-Wire vs. Four-Wire Transmitters</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Wiring</th>
+<th>Power source</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Two-wire</strong></td>
+<td>Signal+ / Signal−</td>
+<td>Loop-powered (DCS supplies 24 VDC)</td>
+<td>Vast majority of field instruments</td>
+</tr>
+<tr>
+<td><strong>Four-wire</strong></td>
+<td>Signal pair + separate power pair</td>
+<td>External 24 VDC or 120/240 VAC</td>
+<td>High-power analyzers, some flow meters</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="33-hart-protocol-digital-on-analog">3.3 HART Protocol — Digital on Analog</h2>
+<p><strong>HART (Highway Addressable Remote Transducer)</strong> superimposes a digital signal on the 4–20 mA current loop using Frequency Shift Keying (FSK):</p>
+<ul>
+<li><strong>1200 Hz</strong> = digital "1"</li>
+<li><strong>2200 Hz</strong> = digital "0"</li>
+<li>The FSK signal averages to zero — it does not disturb the 4–20 mA measurement</li>
+</ul>
+<p><strong>What HART enables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Remote ranging (LRV/URV)</td>
+<td>Calibrate span without visiting the field</td>
+</tr>
+<tr>
+<td>Device identification</td>
+<td>Tag, serial number, model via DCS or handheld</td>
+</tr>
+<tr>
+<td>Secondary variables</td>
+<td>Flow transmitter can report temperature, density, totalizer simultaneously</td>
+</tr>
+<tr>
+<td>Diagnostic alerts</td>
+<td>Sensor drift, plugged impulse line, process noise level</td>
+</tr>
+<tr>
+<td>Loop current override</td>
+<td>Force output to specific mA for loop testing</td>
+</tr>
+</tbody>
+</table>
+<p><strong>HART 5 vs. HART 7:</strong> HART 7 (current standard) adds WirelessHART support, enhanced device descriptions, and richer diagnostic data. Rosemount and Emerson products ship with HART 7 by default; all HART 7 devices communicate with HART 5 masters.</p>
+<h3 id="handheld-communicators">Handheld Communicators</h3>
+<p>The <strong>Emerson 475 Field Communicator</strong> (successor to the 375) is the standard tool for HART communication in the field:</p>
+<ul>
+<li>Auto-detects connected HART devices</li>
+<li>Reads all process variables, configuration, and diagnostics</li>
+<li>Writes configuration (range, damping, engineering units, tag)</li>
+<li>Stores device configurations for offline comparison</li>
+<li>Compatible with FOUNDATION Fieldbus devices as well</li>
+</ul>
+<hr>
+<h2 id="34-rosemount-3051-the-industry-standard-pressure-transmitter">3.4 Rosemount 3051 — The Industry Standard Pressure Transmitter</h2>
+<p>The <strong>Rosemount 3051</strong> family from Emerson is the most widely deployed pressure transmitter in the world. It uses a <strong>capacitance-based sensing cell</strong> — a Hastelloy C diaphragm deflects under pressure, changing the capacitance of a sensing element. The capacitance change is converted to a 4–20 mA output with ±0.065% reference accuracy.</p>
+<h3 id="3051-model-variants">3051 Model Variants</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Measurement</th>
+<th>Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>3051C</strong></td>
+<td>Differential pressure (ΔP)</td>
+<td>0.1 inH₂O to 2000 PSID</td>
+</tr>
+<tr>
+<td><strong>3051T</strong></td>
+<td>Gauge or absolute pressure</td>
+<td>0.3 to 4000 PSIG</td>
+</tr>
+<tr>
+<td><strong>3051L</strong></td>
+<td>Liquid level (flanged)</td>
+<td>For direct tank mounting</td>
+</tr>
+<tr>
+<td><strong>3051S</strong></td>
+<td>Scalable, modular platform</td>
+<td>Coplanar, traditional, or remote seal</td>
+</tr>
+</tbody>
+</table>
+<h3 id="remote-seals">Remote Seals</h3>
+<p>When the process fluid is corrosive, high-temperature, viscous, or prone to plugging impulse lines, the sensing cell connects to the process through a <strong>remote seal</strong> filled with fill fluid (silicone, glycerin, or Halocarbon). The fill fluid transmits pressure without contacting the sensing cell.</p>
+<p><strong>Common remote seal applications:</strong></p>
+<ul>
+<li>High-temperature steam (capillary fill fluid rated to 400°F)</li>
+<li>Slurry service (flush diaphragm — no cavity to plug)</li>
+<li>Corrosive acids (PTFE-lined wetted parts)</li>
+<li>Sanitary processes (3A/FDA-compliant flush diaphragm)</li>
+</ul>
+<h3 id="reading-a-3051-loop">Reading a 3051 Loop</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>24 VDC supply (from DCS I/O card)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── (+) wire → Rosemount 3051 (+) terminal
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    Rosemount 3051 (−) terminal → 250Ω resistor → (−) return
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                                        │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                                  HART modem reads
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                                  voltage across resistor
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                                  (4mA × 250Ω = 1V at zero,
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                                   20mA × 250Ω = 5V at full scale)
+</code></pre></div>
+<p>The DCS I/O card reads 1–5 VDC across the 250Ω resistor and scales it to engineering units.</p>
+<hr>
+<h2 id="35-temperature-measurement">3.5 Temperature Measurement</h2>
+<p>Temperature is the most common process measurement. Two primary sensor technologies dominate:</p>
+<h3 id="rtds-resistance-temperature-detectors">RTDs (Resistance Temperature Detectors)</h3>
+<p>An RTD uses a platinum wire whose resistance increases predictably with temperature:</p>
+<p>$$R_T = R_0 \left[1 + AT + BT^2 + CT^3\right]$$</p>
+<p>For <strong>PT100</strong> (100Ω at 0°C): A = 3.9083×10⁻³, B = −5.775×10⁻⁷, C = −4.183×10⁻¹²</p>
+<table>
+<thead>
+<tr>
+<th>RTD Type</th>
+<th>Resistance at 0°C</th>
+<th>Accuracy</th>
+<th>Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PT100</td>
+<td>100 Ω</td>
+<td>±0.1°C</td>
+<td>−200 to +850°C</td>
+</tr>
+<tr>
+<td>PT1000</td>
+<td>1000 Ω</td>
+<td>±0.1°C</td>
+<td>−200 to +850°C</td>
+</tr>
+</tbody>
+</table>
+<p>RTDs are preferred when accuracy is paramount. They are slower to respond than thermocouples and require a transmitter to convert resistance to 4–20 mA.</p>
+<h3 id="thermocouples">Thermocouples</h3>
+<p>A thermocouple generates a millivolt EMF proportional to the temperature difference between the measuring junction and a reference junction (cold junction). Common types:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Materials</th>
+<th>Range</th>
+<th>Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>J</strong></td>
+<td>Iron / Constantan</td>
+<td>−40 to +750°C</td>
+<td>General purpose</td>
+</tr>
+<tr>
+<td><strong>K</strong></td>
+<td>Chromel / Alumel</td>
+<td>−200 to +1260°C</td>
+<td>Most common industrial</td>
+</tr>
+<tr>
+<td><strong>E</strong></td>
+<td>Chromel / Constantan</td>
+<td>−200 to +900°C</td>
+<td>Highest sensitivity</td>
+</tr>
+<tr>
+<td><strong>T</strong></td>
+<td>Copper / Constantan</td>
+<td>−200 to +370°C</td>
+<td>Cryogenic, food</td>
+</tr>
+<tr>
+<td><strong>S</strong></td>
+<td>Platinum/Rhodium</td>
+<td>0 to +1600°C</td>
+<td>High-temperature, furnaces</td>
+</tr>
+</tbody>
+</table>
+<p>Thermocouples are rugged, fast-responding, and cover extreme temperatures. They are less accurate than RTDs and require cold junction compensation.</p>
+<h3 id="rosemount-644-temperature-transmitter">Rosemount 644 Temperature Transmitter</h3>
+<p>The <strong>Rosemount 644</strong> is the standard head-mounted or DIN-rail temperature transmitter for both RTD and thermocouple inputs:</p>
+<ul>
+<li>Universal input: accepts PT100/PT1000 RTDs, all thermocouple types, millivolt</li>
+<li>HART 7 communication</li>
+<li>Sensor backup: dual-sensor input with automatic failover</li>
+<li><strong>Sensor drift alert:</strong> Compares two sensors and alerts if they diverge beyond threshold</li>
+<li>±0.1°C reference accuracy with PT100 input</li>
+</ul>
+<hr>
+<h2 id="36-flow-measurement-overview">3.6 Flow Measurement Overview</h2>
+<p>Flow measurement is the most diverse measurement category — multiple physical principles, each suited to specific applications.</p>
+<h3 id="differential-pressure-dp-flow">Differential Pressure (DP) Flow</h3>
+<p>The oldest and most widely used flow measurement method. A primary element (orifice plate, venturi, pitot tube) creates a pressure drop proportional to flow squared:</p>
+<p>$$Q = K \cdot A \cdot \sqrt{\frac{2\Delta P}{\rho}}$$</p>
+<p>Where K is the discharge coefficient, A is the restriction area, and ρ is fluid density.</p>
+<p><strong>Orifice plates</strong> are the most common primary element: inexpensive, no moving parts, well-characterized. The <strong>Rosemount 3051SFC</strong> is a purpose-built DP flow transmitter that integrates the DP measurement with static pressure and temperature sensing to perform <strong>multivariable flow compensation</strong> — correcting the volumetric flow to mass flow in real time without an external flow computer.</p>
+<p><strong>Limitation:</strong> DP flow accuracy degrades at low flow (the relationship is √ΔP, so low flow = very low ΔP). Turndown is typically 4:1 to 10:1 without special ranging.</p>
+<h3 id="vortex-flow-rosemount-8800">Vortex Flow — Rosemount 8800</h3>
+<p>A vortex flowmeter measures the frequency of vortices shed by a bluff body inserted in the flow stream. Strouhal number relates vortex frequency to velocity:</p>
+<p>$$f = S_t \cdot \frac{V}{d}$$</p>
+<p>The <strong>Rosemount 8800D</strong> is the industry-leading vortex meter:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fluids</td>
+<td>Liquid, gas, steam</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td>±0.65% of rate (liquid), ±1.0% (gas/steam)</td>
+</tr>
+<tr>
+<td>Turndown</td>
+<td>20:1 (liquid), 15:1 (gas)</td>
+</tr>
+<tr>
+<td>Line sizes</td>
+<td>½" to 12" wafer or flange</td>
+</tr>
+<tr>
+<td>Output</td>
+<td>HART 7 or FOUNDATION Fieldbus</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>−200°C to +427°C process temperature</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Best applications:</strong> Steam flow (no moving parts, handles wet steam), utilities (air, nitrogen, steam), clean liquid service. Not suitable for slurries, very viscous fluids, or very low flow velocities.</p>
+<p>The 8800D multivariable version includes integral temperature and pressure sensing for <strong>compensated mass flow</strong> of steam and gas without external transmitters — three measurements in one device.</p>
+<h3 id="coriolis-flow-micro-motion">Coriolis Flow — Micro Motion</h3>
+<p>Coriolis flowmeters measure <strong>mass flow directly</strong> using the Coriolis effect: a vibrating tube carrying flow experiences a twist proportional to mass flow rate. No density or viscosity correction required.</p>
+<p><strong>Micro Motion ELITE series (Emerson):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td>±0.05% of rate (mass flow)</td>
+</tr>
+<tr>
+<td>Density accuracy</td>
+<td>±0.0005 g/cc</td>
+</tr>
+<tr>
+<td>Turndown</td>
+<td>100:1 or better</td>
+</tr>
+<tr>
+<td>Fluids</td>
+<td>Any liquid or slurry; dense gas</td>
+</tr>
+<tr>
+<td>Outputs</td>
+<td>Mass flow, volume flow, density, temperature — all simultaneously</td>
+</tr>
+<tr>
+<td>Sizes</td>
+<td>1/10" to 6"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why Coriolis wins for custody transfer and batch:</strong> Mass flow is the gold standard for fiscal measurement and recipe dosing. No flow conditioning required. Direct density measurement enables real-time concentration calculation.</p>
+<p><strong>Limitation:</strong> High cost; large pressure drop for small sensors; not suitable for very low-density gases at low pressure.</p>
+<hr>
+<h2 id="37-level-measurement">3.7 Level Measurement</h2>
+<p>Level measurement determines the height of liquid or solid material in a vessel.</p>
+<h3 id="dp-level">DP Level</h3>
+<p>A differential pressure transmitter connected across a vessel measures the hydrostatic head:</p>
+<p>$$\Delta P = \rho \cdot g \cdot h$$</p>
+<p><strong>Rosemount 3051</strong> with remote seals is the most common approach. Wet leg and dry leg configurations handle different process conditions.</p>
+<p><strong>Limitation:</strong> Accuracy depends on constant fluid density. If density varies (temperature, composition), the level reading drifts without compensation.</p>
+<h3 id="guided-wave-radar-gwr-rosemount-5300">Guided Wave Radar (GWR) — Rosemount 5300</h3>
+<p>GWR transmits a microwave pulse down a probe inserted into the vessel. The pulse reflects off the liquid surface (dielectric discontinuity) and returns. Time-of-flight gives level:</p>
+<p>$$L = \frac{c \cdot t}{2}$$</p>
+<p><strong>Rosemount 5300 features:</strong></p>
+<ul>
+<li>Works with liquids, slurries, interfaces (oil/water)</li>
+<li>Immune to vapor, foam, pressure, and temperature changes</li>
+<li>No moving parts; minimal maintenance</li>
+<li>Accuracy: ±3 mm</li>
+<li>Range: up to 20 m</li>
+<li>Rigid or flexible probe for tall vessels and bypass chambers</li>
+</ul>
+<h3 id="non-contact-radar-rosemount-5408">Non-Contact Radar — Rosemount 5408</h3>
+<p>The <strong>Rosemount 5408</strong> uses <strong>FMCW (Frequency Modulated Continuous Wave)</strong> radar to measure level without a probe touching the liquid:</p>
+<ul>
+<li>80 GHz radar (narrow beam — ideal for obstructed vessels)</li>
+<li>±1 mm accuracy</li>
+<li>Works on any liquid with dielectric constant &gt; 1.4</li>
+<li>Suitable for corrosive acids, cryogenic liquids, high-pressure vessels</li>
+<li>No product contact — zero maintenance</li>
+</ul>
+<hr>
+<h2 id="38-wirelesshart-measurement-without-wires">3.8 WirelessHART — Measurement Without Wires</h2>
+<p><strong>WirelessHART (IEC 62591)</strong> extends the HART protocol to a self-organizing mesh radio network operating at 2.4 GHz (IEEE 802.15.4):</p>
+<ul>
+<li><strong>Update rate:</strong> 1 second to 60 minutes (configurable)</li>
+<li><strong>Range:</strong> 250 m line-of-sight; mesh extends coverage</li>
+<li><strong>Security:</strong> AES-128 encryption, device join authentication</li>
+<li><strong>Power:</strong> Battery (3–10 years), energy harvesting, or loop-powered</li>
+<li><strong>Gateway:</strong> Rosemount 1410S converts wireless to HART/MODBUS/OPC-UA for DCS integration</li>
+</ul>
+<p><strong>When to choose WirelessHART:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Remote or inaccessible locations</td>
+<td>No cable trenching cost</td>
+</tr>
+<tr>
+<td>Temporary measurements</td>
+<td>Deploy, measure, remove</td>
+</tr>
+<tr>
+<td>Added measurement points on existing equipment</td>
+<td>Cable cost exceeds transmitter cost</td>
+</tr>
+<tr>
+<td>Monitoring-only points</td>
+<td>Control not required; 15–60 second update acceptable</td>
+</tr>
+<tr>
+<td>Hazardous areas with explosion risk from cabling</td>
+<td>Intrinsically safe wireless alternative</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When NOT to choose WirelessHART:</strong></p>
+<ul>
+<li>Control loops requiring &lt; 1 second update rates</li>
+<li>Applications requiring guaranteed latency (safety systems require wired)</li>
+<li>Dense steel structures that block radio propagation (mesh helps, but verify)</li>
+</ul>
+<hr>
+<h2 id="39-signal-integrity-and-loop-commissioning">3.9 Signal Integrity and Loop Commissioning</h2>
+<h3 id="loop-checking-procedure">Loop Checking Procedure</h3>
+<p>Before a measurement loop goes to service:</p>
+<ol>
+<li><strong>Verify wiring polarity</strong> — 4–20 mA is polarity-sensitive</li>
+<li><strong>Apply process zero</strong> — confirm transmitter reads 4.00 mA</li>
+<li><strong>Apply process full scale</strong> — confirm transmitter reads 20.00 mA</li>
+<li><strong>Check DCS scaling</strong> — confirm DCS displays correct engineering units at both endpoints</li>
+<li><strong>Test HART communication</strong> — confirm tag, range, and secondary variables visible from DCS</li>
+<li><strong>Document as-found configuration</strong> — record in asset management system</li>
+</ol>
+<h3 id="common-loop-problems">Common Loop Problems</h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reading stuck at 3.6 mA</td>
+<td>Broken wire or transmitter power failure</td>
+</tr>
+<tr>
+<td>Reading stuck at 22 mA</td>
+<td>Over-range or sensing element failure</td>
+</tr>
+<tr>
+<td>Noisy/fluctuating reading</td>
+<td>Turbulent process, wrong damping setting, ground loop</td>
+</tr>
+<tr>
+<td>Reading drifts over temperature</td>
+<td>Thermal zero effect — adjust zero trim at process temperature</td>
+</tr>
+<tr>
+<td>HART not communicating</td>
+<td>No 250Ω resistor in loop; verify with multimeter</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="chapter-summary">Chapter Summary</h2>
+<p>The 4–20 mA current loop is the universal language of process instrumentation — the live zero distinguishes broken wires from process zeros, and HART superimposes digital data on the same pair of wires. The Rosemount 3051 pressure transmitter covers differential, gauge, and absolute pressure across virtually all process ranges. Rosemount 644 handles RTD and thermocouple temperature. Flow measurement technology selection depends on fluid type, required accuracy, and turndown — DP orifice for cost, vortex for steam, Coriolis for mass flow custody transfer. Radar has largely replaced float and DP for level in difficult services. WirelessHART extends measurement reach without cable cost where update rates of 8–60 seconds are acceptable. All of these technologies are integrated through HART communication into DCS historians, AMS Device Manager, and the plant asset management ecosystem.</p>
+<hr>
+<h2 id="quiz">Quiz</h2>
+<div class="admonition question">
+<p class="admonition-title">Question 1 — Remember</p>
+<p>What does a 3.6 mA signal on a 4–20 mA loop indicate?</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> A) The process variable is slightly below zero</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled="" checked=""><span class="task-list-indicator"></span></label> <strong>B) The transmitter has detected a fault or the wire is broken</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> C) The transmitter is in manual override</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> D) The HART communication is active</li>
+</ul>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Question 2 — Understand</p>
+<p>A Rosemount 3051 is ranged 0–100 PSIG. The DCS reads 12 mA. What is the process pressure?</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> A) 12 PSIG</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> B) 25 PSIG</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled="" checked=""><span class="task-list-indicator"></span></label> <strong>C) 50 PSIG</strong> <em>(12 mA = 50% of 16 mA span = 50% of 100 PSIG)</em></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> D) 60 PSIG</li>
+</ul>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Question 3 — Evaluate</p>
+<p>A plant wants to add 15 temperature monitoring points in a remote tank farm, 400 meters from the control room. The measurements are for monitoring only — no control loops. What is the best instrumentation approach and why?</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> A) Run conduit and 4–20 mA wiring — most reliable</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> B) Use FOUNDATION Fieldbus — fewer wires</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled="" checked=""><span class="task-list-indicator"></span></label> <strong>C) Deploy WirelessHART transmitters with a gateway — eliminates cable cost across 400m; monitoring-only points don't require the &lt;1 second update rate that would rule out wireless</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled=""><span class="task-list-indicator"></span></label> D) Use thermocouple extension wire direct to DCS — cheapest sensor cost</li>
+</ul>
+</div>
+<hr>
+<h2 id="sales-implications">Sales Implications</h2>
+<div class="admonition tip">
+<p class="admonition-title">Sales bridge — Instrumentation to Applied Control value</p>
+<ol>
+<li><strong>The 3051 is everywhere — use it as the entry point.</strong> Nearly every process plant has hundreds of Rosemount 3051s. Every one of them can be read via HART. Ask: "Are you using AMS Device Manager to monitor these? We can show you what you're missing in 30 minutes from your DCS workstation."</li>
+<li><strong>Wireless is a door-opener.</strong> A customer with 15 monitoring gaps and no budget for cable trenching can deploy WirelessHART for 30–40% of the wired cost. Applied Control can size, quote, and commission — position it as a complete solution including gateway, configuration, and DCS integration.</li>
+<li><strong>Multivariable meters reduce installed cost.</strong> A Rosemount 8800D multivariable replaces three separate transmitters (DP, temperature, pressure) for compensated steam mass flow. The TCO argument writes itself.</li>
+<li><strong>Coriolis is the accuracy sell.</strong> If a customer is using orifice plates for custody transfer or batch dosing, the Micro Motion accuracy upgrade pays back in reduced product give-away and batch rejects. Get the process engineer and finance talking together.</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden="">
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"></path></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"></path></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden="">
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thank you for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden="">
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for letting us know. Help us improve this page.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.appliedcontrol.com" target="_blank" rel="noopener" title="www.appliedcontrol.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.suggest", "content.code.copy", "content.tabs.link", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

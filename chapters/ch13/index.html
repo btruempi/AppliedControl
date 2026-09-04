@@ -1,0 +1,2092 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An intelligent textbook for sales engineers and technical specialists. Build subject matter expertise across Applied Control's complete portfolio: valves, actuators, DeltaV, measurement, safety systems, and industry applications.">
+      
+      
+        <meta name="author" content="Applied Control / Claude">
+      
+      
+        <link rel="canonical" href="https://appliedcontrol.github.io/valve-automation-textbook/chapters/ch13/">
+      
+      
+        <link rel="prev" href="../ch12/">
+      
+      
+        <link rel="next" href="../ch14/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Ch 13: Pressure, Temperature, Level &amp; Analysis - Applied Control — Valve Automation Mastery</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"IBM Plex Sans";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-13-pressure-temperature-level-analysis" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Applied Control — Valve Automation Mastery" class="md-header__button md-logo" aria-label="Applied Control — Valve Automation Mastery" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Applied Control — Valve Automation Mastery
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ch 13: Pressure, Temperature, Level &amp; Analysis
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="orange" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="orange" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../learning-graph/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Learning Graph
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch01/" class="md-tabs__link">
+          
+  
+  
+  Part I — Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch04/" class="md-tabs__link">
+          
+  
+  
+  Part II — Valve Types &amp; Selection
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch09/" class="md-tabs__link">
+          
+  
+  
+  Part III — Actuation &amp; Control
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ch12/" class="md-tabs__link">
+          
+  
+  
+  Part IV — Measurement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch14/" class="md-tabs__link">
+          
+  
+  
+  Part V — Reliability &amp; Compliance
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch16/" class="md-tabs__link">
+          
+  
+  
+  Part VI — Applications &amp; Sales
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Applied Control — Valve Automation Mastery" class="md-nav__button md-logo" aria-label="Applied Control — Valve Automation Mastery" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Applied Control — Valve Automation Mastery
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning-graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learning Graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part I — Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part I — Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 1: Process Control Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 2: Fluid Mechanics for Valve Engineers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 3: Control Loop Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part II — Valve Types &amp; Selection
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part II — Valve Types &amp; Selection
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 4: Control Valves — Bodies &amp; Trim
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 5: Valve Sizing &amp; Flow Coefficients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 6: Isolation, Choke &amp; Specialty Valves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 7: Pressure &amp; Safety Relief Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 8: Steam Systems &amp; Traps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part III — Actuation &amp; Control
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part III — Actuation &amp; Control
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 9: Actuators — Pneumatic, Electric, Hydraulic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 10: Positioners &amp; Digital Valve Controllers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 11: Emerson DeltaV DCS &amp; SIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part IV — Measurement
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part IV — Measurement
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 12: Flow Measurement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 13: Pressure, Temperature, Level &amp; Analysis
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 13: Pressure, Temperature, Level &amp; Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#131-pressure-measurement-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.1 Pressure Measurement — Deep Dive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.1 Pressure Measurement — Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#absolute-gauge-and-differential-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Absolute, Gauge, and Differential Pressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference-accuracy-vs-installed-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Accuracy vs. Installed Accuracy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#132-temperature-measurement-advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.2 Temperature Measurement — Advanced Topics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.2 Temperature Measurement — Advanced Topics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rtd-wiring-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTD Wiring Configurations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thermowell-selection-and-wake-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thermowell Selection and Wake Frequency
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#133-level-measurement-technology-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.3 Level Measurement — Technology Deep Dive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.3 Level Measurement — Technology Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dp-level-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DP Level Measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#float-and-displacer-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Float and Displacer Level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guided-wave-radar-gwr-rosemount-5300" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guided Wave Radar (GWR) — Rosemount 5300
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-contact-radar-rosemount-5408" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-Contact Radar — Rosemount 5408
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#134-process-analysis-online-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.4 Process Analysis — Online Measurement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.4 Process Analysis — Online Measurement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ph-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pH Measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conductivity-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conductivity Measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dissolved-oxygen-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dissolved Oxygen (DO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sales-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sales Implications
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7">
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part V — Reliability &amp; Compliance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part V — Reliability &amp; Compliance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 14: Asset Reliability &amp; Valve Diagnostics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 15: Standards, Codes &amp; Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8">
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part VI — Applications &amp; Sales
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Part VI — Applications &amp; Sales
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 16: Industry Applications — O&amp;G, Refining, Power, Chemical
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 17: Life Sciences, Water &amp; HVAC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ch 18: Sales Engineering — Selection &amp; Value Selling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chapter-13-pressure-temperature-level-analysis">Chapter 13: Pressure, Temperature, Level &amp; Analysis</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Learning Objectives</p>
+<ul>
+<li><strong>Remember:</strong> State the accuracy specification of the Rosemount 3051 pressure transmitter and identify its three model variants</li>
+<li><strong>Understand:</strong> Explain how a guided wave radar level transmitter determines liquid level from a reflected microwave pulse</li>
+<li><strong>Apply:</strong> Select the correct level measurement technology for three different applications: an open water sump, a pressurized reactor with foam, and an interface between oil and water</li>
+<li><strong>Analyze:</strong> Identify why a DP level measurement would drift if the process fluid density changes, and calculate the level error for a given density change</li>
+<li><strong>Evaluate:</strong> Justify the selection of a Rosemount 5408 non-contact radar over a float-based level switch for a hydrofluoric acid storage tank</li>
+</ul>
+</div>
+<hr>
+<h2 id="131-pressure-measurement-deep-dive">13.1 Pressure Measurement — Deep Dive</h2>
+<p>Chapter 3 introduced the Rosemount 3051 pressure transmitter family. This chapter provides the application engineering depth needed to specify, install, and troubleshoot pressure measurement in demanding services.</p>
+<h3 id="absolute-gauge-and-differential-pressure">Absolute, Gauge, and Differential Pressure</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Symbol</th>
+<th>Zero reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Absolute pressure</strong></td>
+<td>Pressure above perfect vacuum</td>
+<td>PSIA</td>
+<td>Perfect vacuum (0 PSIA)</td>
+</tr>
+<tr>
+<td><strong>Gauge pressure</strong></td>
+<td>Pressure above local atmospheric</td>
+<td>PSIG</td>
+<td>Local atmospheric (~14.7 PSIA)</td>
+</tr>
+<tr>
+<td><strong>Differential pressure</strong></td>
+<td>Difference between two pressures</td>
+<td>PSID</td>
+<td>Any reference point</td>
+</tr>
+<tr>
+<td><strong>Vacuum (negative gauge)</strong></td>
+<td>Pressure below atmospheric</td>
+<td>in Hg vac, PSIA</td>
+<td>Atmospheric</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rosemount 3051C</strong> measures differential pressure (most versatile — used for DP flow, DP level, and process ΔP).
+<strong>Rosemount 3051T</strong> measures gauge or absolute pressure.
+<strong>Rosemount 3051L</strong> is flanged for direct tank/vessel mounting for liquid level.</p>
+<h3 id="installation-considerations">Installation Considerations</h3>
+<p><strong>Impulse line design:</strong></p>
+<p>Impulse lines connect the process tap to the transmitter sensing element. Improper impulse line design is the leading cause of pressure measurement error in the field:</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Plugged impulse line</strong></td>
+<td>Process fluid solidifying or scaling in line</td>
+<td>Remote seal; heated impulse line; purge system</td>
+</tr>
+<tr>
+<td><strong>Liquid-filled line in gas service</strong></td>
+<td>Condensate accumulates in low point</td>
+<td>Slope lines to drain; install drain legs</td>
+</tr>
+<tr>
+<td><strong>Gas-filled line in liquid service</strong></td>
+<td>Air bubble trapped in high point</td>
+<td>Install vent at high point; slope lines to transmitter</td>
+</tr>
+<tr>
+<td><strong>Freezing</strong></td>
+<td>Cold ambient temperature</td>
+<td>Insulate and heat trace impulse lines</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Manifold valves:</strong> A 3-valve or 5-valve manifold allows:
+- Isolating the transmitter from process for maintenance
+- Equalizing high and low sides to check zero
+- Venting the sensing element for calibration</p>
+<h3 id="reference-accuracy-vs-installed-accuracy">Reference Accuracy vs. Installed Accuracy</h3>
+<p>The Rosemount 3051 reference accuracy of ±0.065% is measured at:
+- Constant temperature (23°C ± 2°C)
+- Constant supply voltage
+- Mid-range calibration span</p>
+<p>In installed conditions, additional error terms apply:
+- <strong>Thermal zero effect:</strong> ±0.01% of URL per 10°C from reference
+- <strong>Span effect:</strong> ±0.01% of reading per 10°C
+- <strong>Static pressure effect (for DP transmitters):</strong> ±0.15% of reading per 1000 PSIG</p>
+<p>Total installed accuracy for a typical process application is typically ±0.1–0.2% — still among the best in the industry.</p>
+<hr>
+<h2 id="132-temperature-measurement-advanced-topics">13.2 Temperature Measurement — Advanced Topics</h2>
+<h3 id="rtd-wiring-configurations">RTD Wiring Configurations</h3>
+<p>RTDs are affected by the resistance of lead wires. Three wiring configurations address this:</p>
+<p><strong>2-wire:</strong> Lead wire resistance adds directly to RTD resistance measurement. Acceptable only for short leads or when ±1°C accuracy is sufficient.</p>
+<p><strong>3-wire:</strong> Third wire allows the transmitter to measure and subtract one lead wire resistance. Assumes both leads have equal resistance — accurate to ±0.1°C with equal-gauge wires of same length.</p>
+<p><strong>4-wire:</strong> Separate current and voltage leads — Kelvin connection completely eliminates lead wire effect. Used for laboratory and highest-accuracy process applications.</p>
+<p>The <strong>Rosemount 644</strong> transmitter supports 2, 3, and 4-wire RTD connections, configured via HART.</p>
+<h3 id="thermowell-selection-and-wake-frequency">Thermowell Selection and Wake Frequency</h3>
+<p>A <strong>thermowell</strong> is a pressure-tight well inserted into the process that houses the temperature sensor. It protects the sensor from process pressure, velocity, and chemistry while allowing sensor removal without process shutdown.</p>
+<p><strong>Wake frequency (Strouhal resonance):</strong> Fluid flowing past the thermowell creates vortices at a frequency proportional to velocity. If this wake frequency equals the thermowell's natural resonant frequency, the thermowell can vibrate destructively — a failure mode that has caused process shutdowns and sensor failures.</p>
+<p><strong>ASME PTC 19.3 TW-2016</strong> governs thermowell wake frequency analysis. For high-velocity service (steam, gas flow &gt; 50 ft/s), the thermowell must be analyzed to confirm:</p>
+<p>$$f_{wake} \neq f_{natural}$$</p>
+<p><strong>Thermowell selection factors:</strong>
+- Process temperature and pressure (determines material and wall thickness)
+- Process velocity (determines wake frequency analysis requirement)
+- Process fluid (corrosion — 316SS for most, Hastelloy for acids, ceramic for extreme temp)
+- Insertion length (must reach past boundary layer into bulk flow)
+- Connection size (matching process nozzle — typically ¾" or 1" NPT/flanged)</p>
+<hr>
+<h2 id="133-level-measurement-technology-deep-dive">13.3 Level Measurement — Technology Deep Dive</h2>
+<h3 id="dp-level-measurement">DP Level Measurement</h3>
+<p>The hydrostatic head created by a liquid column in a vessel is measured by a differential pressure transmitter:</p>
+<p>$$\Delta P = \rho \cdot g \cdot H$$</p>
+<p>Where H = liquid height, ρ = liquid density, g = gravitational constant.</p>
+<p><strong>Wet leg vs. dry leg:</strong></p>
+<ul>
+<li><strong>Dry leg (gas reference):</strong> The low-pressure tap connects to vapor space above the liquid. Works for open vessels or closed vessels where the vapor will not condense in the reference leg.</li>
+<li><strong>Wet leg (liquid reference):</strong> The low-pressure tap is filled with a reference liquid (seal fluid or process condensate) maintained at a constant level. Required when process vapor condenses in the reference leg (common in steam/hot liquid vessels).</li>
+</ul>
+<p><strong>Density effect on DP level accuracy:</strong></p>
+<p>If the process fluid density changes (temperature, concentration, or phase change), the measured DP no longer represents actual level:</p>
+<p>$$H_{actual} = H_{measured} \cdot \frac{\rho_{calibrated}}{\rho_{actual}}$$</p>
+<p><strong>Example:</strong> A tank calibrated for water (SG=1.0) containing a process fluid at SG=0.85 will read 18% high. This is a significant source of error in variable-composition services (reactors, distillation column sumps).</p>
+<p><strong>Solution for variable-density service:</strong>
+- Use a Coriolis or nuclear density measurement to compensate DP level readings in real time
+- Use radar (non-density-dependent) instead of DP for level</p>
+<h3 id="float-and-displacer-level">Float and Displacer Level</h3>
+<p>A <strong>float</strong> rides on the liquid surface; its position is transmitted mechanically or magnetically to an external indicator or transmitter. Simple, reliable, but limited to clear liquids without foam, coating, or turbulence.</p>
+<p>A <strong>displacer</strong> is a cylinder heavier than the liquid that hangs from a torque tube. As liquid level rises, buoyancy increases, rotating the torque tube. Fisher Level-Trol™ displacer instruments were industry standards for decades and are still in service in many plants.</p>
+<p><strong>Limitation:</strong> Displacers calibrate for a specific liquid density. Density change = level reading error. Modern preference is guided wave radar for most displacer replacement applications.</p>
+<h3 id="guided-wave-radar-gwr-rosemount-5300">Guided Wave Radar (GWR) — Rosemount 5300</h3>
+<p><strong>Guided Wave Radar</strong> transmits a microwave pulse (TDR — Time Domain Reflectometry) down a probe into the vessel. The pulse reflects off the liquid surface (or liquid/liquid interface) due to the dielectric discontinuity:</p>
+<p>$$L = \frac{c \cdot t}{2\varepsilon_r^{0.5}}$$</p>
+<p>Where c = speed of light, t = time of flight, εᵣ = dielectric constant of vapor space.</p>
+<p><strong>GWR advantages:</strong>
+- Immune to pressure, temperature, vapor space composition
+- Measures liquid/liquid interface (oil/water) — two echoes on one probe
+- Works with foam (RF pulse penetrates foam better than radar)
+- Works in bypass chambers, stilling wells, and bridles
+- Accuracy: ±3mm</p>
+<p><strong>GWR probe types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Probe</th>
+<th>Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rigid single rod</strong></td>
+<td>Short-to-medium vessels, clean liquids</td>
+</tr>
+<tr>
+<td><strong>Rigid twin parallel</strong></td>
+<td>Better signal in low-dielectric fluids</td>
+</tr>
+<tr>
+<td><strong>Coaxial</strong></td>
+<td>Highest accuracy; works in liquids with εᵣ &gt; 1.4</td>
+</tr>
+<tr>
+<td><strong>Flexible cable</strong></td>
+<td>Tall vessels; coiled at bottom to prevent damage</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rosemount 5301:</strong> Basic GWR for general liquids.
+<strong>Rosemount 5302:</strong> Interface measurement (oil/water/emulsion layers).
+<strong>Rosemount 5303:</strong> High-temperature, high-pressure service (up to 450°C, 400 bar).</p>
+<h3 id="non-contact-radar-rosemount-5408">Non-Contact Radar — Rosemount 5408</h3>
+<p>The <strong>Rosemount 5408</strong> is Emerson's flagship non-contact radar level transmitter:</p>
+<ul>
+<li><strong>80 GHz FMCW radar:</strong> High frequency = narrow beam angle (3°–5°) → works in vessels with internal obstructions (agitators, heating coils, baffles)</li>
+<li><strong>FMCW (Frequency Modulated Continuous Wave):</strong> Continuously transmits a frequency-swept signal; measures level from the frequency difference between transmitted and reflected signals — highly accurate, insensitive to dust, vapor, and condensation</li>
+<li><strong>Accuracy:</strong> ±1 mm reference accuracy</li>
+<li><strong>Range:</strong> Up to 30 meters</li>
+<li><strong>Application:</strong> All liquid services; solids surface measurement; no product contact</li>
+</ul>
+<p><strong>When to choose 5408 over 5300 GWR:</strong>
+- Toxic or corrosive liquids where probe insertion is undesirable (HF acid, chlorine)
+- Strong agitation that would damage a probe
+- Vessels where probe installation is mechanically difficult
+- Solids (granules, powders) level measurement
+- Where zero maintenance contact is required</p>
+<hr>
+<h2 id="134-process-analysis-online-measurement">13.4 Process Analysis — Online Measurement</h2>
+<h3 id="ph-measurement">pH Measurement</h3>
+<p>pH measures hydrogen ion concentration — a logarithmic scale from 0 (strongly acidic) to 14 (strongly alkaline):</p>
+<p>$$\text{pH} = -\log_{10}[H^+]$$</p>
+<p>pH measurement requires:
+- <strong>pH glass electrode:</strong> Measures EMF proportional to H⁺ activity
+- <strong>Reference electrode:</strong> Provides a stable reference potential
+- <strong>Temperature sensor:</strong> Temperature compensation (pH is temperature-dependent)
+- <strong>pH transmitter:</strong> Converts millivolt signal to 4–20 mA; provides temperature compensation</p>
+<p><strong>Rosemount pH sensor line:</strong> Includes in-line, submersion, and retractable designs for varying process conditions (pressure, temperature, abrasion).</p>
+<p><strong>Maintenance requirement:</strong> pH electrodes have a finite life (6–18 months typical) and require regular calibration (pH 4 and pH 7 buffer solutions). This is a high-maintenance measurement — automated calibration systems reduce labor burden.</p>
+<h3 id="conductivity-measurement">Conductivity Measurement</h3>
+<p>Conductivity measures the ability of a solution to conduct electrical current — directly proportional to dissolved ion concentration. Used for:
+- Boiler water purity monitoring
+- RO/DI water quality verification
+- Acid/base concentration measurement
+- Ion exchange resin exhaustion detection</p>
+<h3 id="dissolved-oxygen-do">Dissolved Oxygen (DO)</h3>
+<p>DO measurement is critical in biological wastewater treatment — DO must be maintained in the correct range for aerobic bacteria activity. Optical DO sensors (luminescence-based) have largely replaced electrochemical Clark cells because they:
+- Don't consume oxygen during measurement
+- Require minimal maintenance (no membrane to replace)
+- Drift very little between calibrations</p>
+<hr>
+<h2 id="chapter-summary">Chapter Summary</h2>
+<p>Pressure measurement begins with the Rosemount 3051 family — 3051C for differential, 3051T for gauge/absolute, 3051L for flanged level. Installed accuracy depends on proper impulse line design — the leading source of error is poor mechanical installation, not transmitter performance. Temperature measurement requires RTD wiring configuration selection and thermowell wake frequency analysis for high-velocity service. Level measurement technology selection depends on fluid properties (density stability, conductivity, corrosivity, foam, turbulence) — GWR for most process liquids, non-contact radar for toxic/corrosive/agitated services, DP for simple clean-liquid services where density is known. Process analysis — pH, conductivity, dissolved oxygen — extends the measurement layer into quality and environmental compliance monitoring.</p>
+<hr>
+<h2 id="sales-implications">Sales Implications</h2>
+<div class="admonition tip">
+<p class="admonition-title">Sales bridge — Advanced measurement to Applied Control value</p>
+<ol>
+<li><strong>Level technology upgrades are the largest installed base opportunity.</strong> Every plant has displacer-type level instruments on distillation columns, fractionators, and reactors that have drifted from their calibrated density and are reading incorrectly. The GWR/radar upgrade conversation writes itself: 'Your level instruments calibrated for SG=0.72 — what is your current sump composition?'</li>
+<li><strong>Thermowell failures are a safety and reliability issue.</strong> A thermowell failure in high-velocity steam or gas creates an immediate process hazard (sensor falls into the process) and a process shutdown. Applied Control can provide the wake frequency analysis (per ASME PTC 19.3 TW) that identifies at-risk thermowells — this is a genuine safety service, not just product upsell.</li>
+<li><strong>pH probe maintenance programs create recurring revenue.</strong> Any plant with pH loops has a regular probe replacement and calibration need. Applied Control can supply Rosemount pH probes and offer a calibration service program — quarterly visits, calibration documentation, probe replacement on schedule.</li>
+<li><strong>The 5408 non-contact radar replaces nuclear level gauges.</strong> Some plants use nuclear (radiometric) level gauges for difficult services (heavy slurry, high temperature). Nuclear gauges require NRC licensing, radiation survey, and strict personnel safety protocols. The 5408 80 GHz radar often provides equivalent accuracy without any nuclear licensing burden — a compelling de-licensing story.</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden="">
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"></path></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"></path></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden="">
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thank you for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden="">
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for letting us know. Help us improve this page.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.appliedcontrol.com" target="_blank" rel="noopener" title="www.appliedcontrol.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.suggest", "content.code.copy", "content.tabs.link", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
